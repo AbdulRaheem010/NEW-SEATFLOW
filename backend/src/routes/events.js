@@ -3,7 +3,6 @@ const { requireAuth } = require('../middleware/auth');
 const events = require('../controllers/eventController');
 const tables = require('../controllers/tableController');
 const guests = require('../controllers/guestController');
-const { optimizeSeating } = require('../controllers/optimizerController');
 
 const router = express.Router();
 router.use(requireAuth);
@@ -27,6 +26,5 @@ router.patch('/:eventId/guests/:guestId', guests.updateGuest);
 router.post('/:eventId/guests/:guestId/check-in', guests.checkInGuest);
 router.delete('/:eventId/guests/:guestId', guests.deleteGuest);
 
-router.post('/:eventId/optimizer', optimizeSeating);
 
 module.exports = router;
