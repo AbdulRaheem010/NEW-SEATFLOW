@@ -119,7 +119,7 @@ async function initEventsListPage() {
 /* ------------------------------------------------------------------ */
 /* Create-event wizard                                                  */
 /* ------------------------------------------------------------------ */
-const WIZARD_STEPS = ['details', 'guests', 'tables', 'seating', 'branding', 'guest-experience', 'publish'];
+const WIZARD_STEPS = ['details', 'guests', 'tables', 'seating', 'branding', 'guest-experience', 'review'];
 
 function initCreateEventWizard() {
   const wizardEl = document.querySelector('[data-wizard]');
@@ -154,7 +154,7 @@ function initCreateEventWizard() {
 
   function renderProgress() {
     progressEl.innerHTML = WIZARD_STEPS.map((step, i) => {
-      const label = { details: 'Event Details', guests: 'Guests', tables: 'Tables', seating: 'Seating', branding: 'Branding', 'guest-experience': 'Guest Experience', publish: 'Publish' }[step];
+      const label = { details: 'Event Details', guests: 'Guests', tables: 'Tables', seating: 'Seating', branding: 'Branding', 'guest-experience': 'Guest Experience', review: 'Review & Create' }[step];
       const state = i === currentStep ? 'active' : i < currentStep ? 'done' : '';
       return `<div class="wizard-step ${state}"><span class="step-circle">${i < currentStep ? '\u2713' : i + 1}</span><span class="label">${label}</span></div>`;
     }).join('');
@@ -273,7 +273,7 @@ function initCreateEventWizard() {
 
   publishBtn?.addEventListener('click', async () => {
     if (!isRequired(wizardState.details.name)) {
-      toast('Complete the event details step before publishing.', 'error');
+      toast('Complete the event details step before creating the event.', 'error');
       goTo(0);
       return;
     }
