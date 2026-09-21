@@ -61,7 +61,7 @@ const getEvent = asyncHandler(async (req, res) => {
 });
 
 const createEvent = asyncHandler(async (req, res) => {
-  const { name, type, date, startTime, endTime, venue, description, timezone, plan } = req.body;
+  const { name, type, date, startTime, endTime, venue, description, timezone } = req.body;
   if (!name || !date || !venue) {
     return res.status(400).json({ error: 'name, date and venue are required.' });
   }
@@ -73,15 +73,15 @@ const createEvent = asyncHandler(async (req, res) => {
   const result = await pool.query(
     `INSERT INTO events (owner_id, slug, name, type, date, start_time, end_time, venue, description, timezone, plan)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
-    [req.user.id, slug, name, type || 'Other', date, startTime || null, endTime || null, venue, description || null, timezone || null, plan || 'free']
+    [req.user.id, slug, name, type || 'Other', date, startTime || null, endTime || null, venue, description || null, timezone || null, 'free']
   );
 
   res.status(201).json({ event: toPublicEvent(result.rows[0], { guestCount: 0, assignedCount: 0, checkedInCount: 0 }) });
 });
 
 const updateEvent = asyncHandler(async (req, res) => {
-  const fields = ['name', 'type', 'date', 'start_time', 'end_time', 'venue', 'description', 'timezone', 'logo_url', 'theme', 'status', 'plan', 'show_tablemates', 'anonymous_lookup', 'qr_active'];
-  const bodyKeyMap = { startTime: 'start_time', endTime: 'end_time', logo: 'logo_url', showTablemates: 'show_tablemates', anonymousLookup: 'anonymous_lookup', qrActive: 'qr_active' };
+  const fields = ['name', 'type', 'date', 'start_time', 'end_time', 'venue', 'description', 'timezone', 'logo_url', 'theme', 'show_tablemates', 'anonymous_lookup'];
+  const bodyKeyMap = { startTime: 'start_time', endTime: 'end_time', logo: 'logo_url', showTablemates: 'show_tablemates', anonymousLookup: 'anonymous_lookup' };
 
   const updates = [];
   const values = [];
