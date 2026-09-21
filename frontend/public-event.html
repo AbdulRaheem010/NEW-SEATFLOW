@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Seat — SeatFlow</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<main class="section">
+  <div class="container" style="max-width:720px;">
+    <div class="section-head center">
+      <span class="section-kicker">SeatFlow</span>
+      <h1 data-event-name>Find Your Seat</h1>
+      <p class="lead" data-event-details>Loading event…</p>
+    </div>
+    <div class="dash-panel">
+      <h3>Find your seating</h3>
+      <p>Enter your name exactly as it appears on the guest list.</p>
+      <form data-lookup-form style="margin-top:20px;">
+        <input class="text-input" name="name" placeholder="Your full name" required minlength="2">
+        <button class="btn btn-primary btn-block" type="submit" style="margin-top:12px;">Find My Seat</button>
+      </form>
+      <div data-result style="margin-top:20px;"></div>
+    </div>
+  </div>
+</main>
+<script type="module" src="js/public-event.js"></script>
+</body>
+</html>
