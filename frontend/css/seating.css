@@ -123,7 +123,8 @@
 .seating-canvas { position: relative; width: 1600px; height: 1200px; transform-origin: 0 0; }
 
 .table-node {
-  position: absolute; display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  touch-action: none; display: flex; align-items: center; justify-content: center;
   background: var(--surface); border: 2px solid var(--border); box-shadow: var(--shadow-sm);
   cursor: grab; user-select: none;
 }
