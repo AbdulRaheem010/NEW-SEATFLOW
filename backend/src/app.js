@@ -25,7 +25,7 @@ app.use(cors({
   origin: allowedOrigins.length > 0 ? allowedOrigins : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.json());\n\napp.use((req, res, next) => {\n  const startedAt = Date.now();\n  res.on('finish', () => {\n    console.log(`[seatflow-backend] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${Date.now() - startedAt}ms)`);\n  });\n  next();\n});
 
 app.get('/', (req, res) => {
   res.json({ name: 'SeatFlow API', status: 'ok' });
