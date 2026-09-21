@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guests — SeatFlow</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/seating.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <aside class="app-sidebar">
+    <a href="../index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-link"><span class="dot"></span>Overview</a>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Events</p>
+        <a href="events.html" class="sidebar-link"><span class="dot"></span>All Events</a>
+        <a href="create-event.html" class="sidebar-link"><span class="dot"></span>Create Event</a>
+      </div>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">This event</p>
+        <a href="guests.html" class="sidebar-link active"><span class="dot"></span>Guests</a>
+        <a href="tables.html" class="sidebar-link"><span class="dot"></span>Tables</a>
+        <a href="seating.html" class="sidebar-link"><span class="dot"></span>Seating</a>
+      </div>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Workspace</p>
+        <a href="templates.html" class="sidebar-link"><span class="dot"></span>Templates</a>
+        <a href="analytics.html" class="sidebar-link"><span class="dot"></span>Analytics</a>
+        <a href="billing.html" class="sidebar-link"><span class="dot"></span>Billing</a>
+      </div>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Account</p>
+        <a href="settings.html" class="sidebar-link"><span class="dot"></span>Settings</a>
+        <a href="../faq.html" class="sidebar-link"><span class="dot"></span>Help</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user-avatar" data-user-initial>U</div>
+      <div class="sidebar-user-meta"><strong data-user-name>Organizer</strong><span>Standard plan</span></div>
+      <button class="sidebar-logout" data-logout>Log out</button>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="sidebar-toggle-mobile" data-sidebar-toggle aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        <h1>Guests \u2014 <span data-event-name>Event</span></h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" data-open-import>Import Guests</button>
+        <button class="btn btn-ghost btn-sm" data-export-guests>Export</button>
+        <button class="btn btn-primary btn-sm" data-add-guest>Add Guest</button>
+      </div>
+    </header>
+
+    <div class="app-content" data-guests-shell>
+      <div class="toolbar">
+        <input type="search" class="search-input" placeholder="Search guests\u2026" data-guest-search>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Guest</th><th>Group</th><th>Meal</th><th>Table</th><th>Seat</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody data-guest-table-body></tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" data-guest-empty style="display:none;">
+        <h3>No guests yet.</h3>
+        <p>Import your guest list or add your first guest.</p>
+        <div class="empty-actions">
+          <button class="btn btn-primary" data-open-import>Import Guests</button>
+          <button class="btn btn-ghost" data-add-guest>Add Guest</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit Guest modal -->
+<div class="modal-overlay" data-guest-modal>
+  <div class="modal-box">
+    <h3 data-guest-modal-title>Add Guest</h3>
+    <form data-guest-form novalidate>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="guestFirstName">First Name</label>
+          <input type="text" id="guestFirstName">
+          <p class="form-error"></p>
+        </div>
+        <div class="form-field">
+          <label for="guestLastName">Last Name</label>
+          <input type="text" id="guestLastName">
+          <p class="form-error"></p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="guestEmail">Email</label>
+          <input type="email" id="guestEmail">
+          <p class="form-error"></p>
+        </div>
+        <div class="form-field">
+          <label for="guestPhone">Phone</label>
+          <input type="tel" id="guestPhone">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="guestGroup">Group</label>
+          <input type="text" id="guestGroup" placeholder="e.g. Bride's side">
+        </div>
+        <div class="form-field">
+          <label for="guestMeal">Meal</label>
+          <select id="guestMeal">
+            <option value="">Select\u2026</option>
+            <option>Standard</option>
+            <option>Vegetarian</option>
+            <option>Vegan</option>
+            <option>Gluten-Free</option>
+            <option>Kids</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="checkbox-row"><input type="checkbox" id="guestVip"> VIP guest</label>
+      </div>
+      <div class="form-field">
+        <label for="guestNotes">Notes</label>
+        <textarea id="guestNotes"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Guest</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete confirmation -->
+<div class="modal-overlay" data-delete-modal>
+  <div class="modal-box">
+    <h3>Remove this guest?</h3>
+    <p style="color:var(--text-muted); font-size:0.92rem;">This can\u2019t be undone. Their seat, if assigned, will become open.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+      <button type="button" class="btn btn-primary" style="background:var(--danger);" data-confirm-delete>Remove Guest</button>
+    </div>
+  </div>
+</div>
+
+<!-- CSV/Excel Import modal -->
+<div class="modal-overlay" data-import-modal>
+  <div class="modal-box" style="max-width:640px;">
+    <h3>Import Guests</h3>
+    <div class="import-steps">
+      <span data-step-label="upload">Upload</span><span class="sep">\u2192</span>
+      <span data-step-label="map">Map Columns</span><span class="sep">\u2192</span>
+      <span data-step-label="preview">Preview &amp; Import</span>
+    </div>
+
+    <div data-step-upload>
+      <div class="dropzone" data-dropzone>
+        <h4>Drop your CSV file here</h4>
+        <p>or click to browse \u2014 .csv files only</p>
+        <input type="file" accept=".csv" data-file-input>
+      </div>
+      <p style="margin-top:14px; font-size:0.85rem;"><a href="#" data-template-download style="color:var(--emerald); font-weight:600;">Download a blank CSV template</a></p>
+    </div>
+
+    <div data-step-map style="display:none;">
+      <p class="field-hint" style="margin-bottom:14px;">Match your spreadsheet\u2019s columns to SeatFlow fields.</p>
+      <div data-map-body></div>
+    </div>
+
+    <div data-step-preview style="display:none;">
+      <div class="import-summary" data-preview-summary></div>
+      <div class="import-preview-table" data-preview-table></div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" data-modal-close>Close</button>
+      <button type="button" class="btn btn-ghost" data-import-back>Back</button>
+      <button type="button" class="btn btn-primary" data-import-next>Next</button>
+      <button type="button" class="btn btn-primary" data-import-commit style="display:none;">Import Guests</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../js/dashboard.js"></script>
+<script type="module" src="../js/guests.js"></script>
+</body>
+</html>

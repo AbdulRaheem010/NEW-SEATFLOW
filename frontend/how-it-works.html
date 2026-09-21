@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — SeatFlow</title>
+<meta name="description" content="From adding guests to sharing your QR code — how SeatFlow takes an event from spreadsheet to seated.">
+<meta property="og:title" content="How It Works — SeatFlow">
+<meta property="og:description" content="From spreadsheet to seated in four steps.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <nav class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="templates.html">Templates</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="login-link">Log in</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Create Your Event</a>
+    </div>
+    <button class="nav-toggle" data-drawer-toggle aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-drawer" data-drawer>
+  <div class="drawer-overlay"></div>
+  <div class="drawer-panel">
+    <button class="drawer-close" data-drawer-close aria-label="Close menu">&times;</button>
+    <nav>
+      <a href="features.html">Features</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="templates.html">Templates</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="drawer-actions">
+      <a href="login.html" class="btn btn-ghost btn-block">Log in</a>
+      <a href="register.html" class="btn btn-primary btn-block">Create Your Event</a>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <section class="page-header">
+    <div class="container">
+      <span class="hero-eyebrow">How it works</span>
+      <h1>From spreadsheet to seated in four steps.</h1>
+      <p class="lead">No app for guests to install, no printed board to replace on the day. Just a name search and a table number.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="grid-2" style="align-items:center; margin-bottom:90px;">
+        <div>
+          <span class="step-num" style="font-size:2rem;">01</span>
+          <h2 style="margin:14px 0 16px;">Add your guests</h2>
+          <p class="lead">Type guests in one by one, or import your existing spreadsheet. Map the columns once and SeatFlow does the rest — flagging duplicates and errors before anything is saved.</p>
+        </div>
+        <div class="mock-card" style="padding:22px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;"><span>Guest</span><span>Status</span></div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border);"><span>Sarah Johnson</span><span style="color:var(--success);">Valid</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border);"><span>Ahmed Malik</span><span style="color:var(--success);">Valid</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border);"><span>Grace Lin</span><span style="color:var(--warning);">Duplicate</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="align-items:center; margin-bottom:90px;">
+        <div class="mock-card" style="padding:22px; order:2;">
+          <div class="mock-table" style="margin-bottom:0;">
+            <span>Table</span>
+            <strong>08</strong>
+          </div>
+          <p style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:12px;">8 of 10 seats filled</p>
+        </div>
+        <div style="order:1;">
+          <span class="step-num" style="font-size:2rem;">02</span>
+          <h2 style="margin:14px 0 16px;">Assign tables</h2>
+          <p class="lead">Drag guests from the pool onto round, square or rectangular tables on a visual floor — or let the optimizer propose a first pass based on your rules.</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="align-items:center; margin-bottom:90px;">
+        <div>
+          <span class="step-num" style="font-size:2rem;">03</span>
+          <h2 style="margin:14px 0 16px;">Customize the experience</h2>
+          <p class="lead">Pick a template, add your logo and colors, and write your own welcome message — with a live preview of exactly what guests will see.</p>
+        </div>
+        <div class="mock-card" style="padding:22px;">
+          <div style="display:flex; gap:10px;">
+            <span style="width:24px;height:24px;border-radius:50%;background:var(--emerald);"></span>
+            <span style="width:24px;height:24px;border-radius:50%;background:var(--brass);"></span>
+            <span style="width:24px;height:24px;border-radius:50%;background:var(--ink);"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="align-items:center;">
+        <div class="mock-card mock-qr" style="position:static; transform:none; width:220px; margin:0 auto;">
+          <div class="mock-qr-grid"></div>
+          <p>Scan to find your seat</p>
+        </div>
+        <div>
+          <span class="step-num" style="font-size:2rem;">04</span>
+          <h2 style="margin:14px 0 16px;">Share your QR code</h2>
+          <p class="lead">Print it once and post it at the entrance. Every seat change you make afterward updates instantly — the code never needs to be reprinted.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <span class="section-kicker">See it for yourself</span>
+      <h2>Walk through a real event.</h2>
+      <p>Explore the demo as both an organizer and a guest.</p>
+      <div class="hero-actions">
+        <a href="demo.html" class="btn btn-on-dark">View Live Demo</a>
+        <a href="register.html" class="btn btn-ghost" style="border-color:var(--border-dark); color:var(--text-on-dark);">Create Your Event</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+        <p>Digital seating and guest experience for events of every size.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="templates.html">Templates</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="demo.html">Live Demo</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="register.html">Create Your Event</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 SeatFlow. All rights reserved.</span>
+      <span>Sample data shown throughout this site is for demonstration only.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

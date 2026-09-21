@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — SeatFlow</title>
+<meta name="description" content="Create a free SeatFlow account and build your first digital seating event.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <a href="index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <blockquote>
+      &ldquo;We moved 40 people between tables the morning of, and nobody noticed but us.&rdquo;
+      <cite>Daniel K., Events lead, Foster Hall</cite>
+    </blockquote>
+  </div>
+  <div class="auth-form-wrap">
+    <div class="auth-card">
+      <h1>Create your account</h1>
+      <p class="lead">Free to start — no credit card required.</p>
+
+      <div class="form-status" role="alert"></div>
+
+      <form data-register-form novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" autocomplete="given-name">
+            <p class="form-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" name="lastName" autocomplete="family-name">
+            <p class="form-error"></p>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com">
+          <p class="form-error"></p>
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <div class="password-field">
+            <input type="password" id="password" name="password" autocomplete="new-password" placeholder="At least 8 characters">
+            <button type="button" class="password-toggle">Show</button>
+          </div>
+          <p class="form-error"></p>
+        </div>
+        <div class="form-field">
+          <label for="confirmPassword">Confirm password</label>
+          <div class="password-field">
+            <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password">
+            <button type="button" class="password-toggle">Show</button>
+          </div>
+          <p class="form-error"></p>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      </form>
+
+      <p class="auth-switch">Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SeatFlow — Digital seating charts guests actually enjoy</title>
+<meta name="description" content="SeatFlow turns your seating chart into a single QR code. Guests scan, search their name, and find their table in seconds — no line, no board, no printing.">
+<meta property="og:title" content="SeatFlow — Digital seating charts guests actually enjoy">
+<meta property="og:description" content="Share one QR code and let every guest find their table instantly from their phone.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <nav class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="templates.html">Templates</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="login-link">Log in</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Create Your Event</a>
+    </div>
+    <button class="nav-toggle" data-drawer-toggle aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-drawer" data-drawer>
+  <div class="drawer-overlay"></div>
+  <div class="drawer-panel">
+    <button class="drawer-close" data-drawer-close aria-label="Close menu">&times;</button>
+    <nav>
+      <a href="features.html">Features</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="templates.html">Templates</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="drawer-actions">
+      <a href="login.html" class="btn btn-ghost btn-block">Log in</a>
+      <a href="register.html" class="btn btn-primary btn-block">Create Your Event</a>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <span class="hero-eyebrow">Digital seating &amp; guest experience</span>
+        <h1>Your guests shouldn&rsquo;t have to search through a seating chart.</h1>
+        <p class="lead">Build a beautiful digital seating experience, share one QR code, and let every guest find their table in seconds — straight from their phone.</p>
+        <div class="hero-actions">
+          <a href="register.html" class="btn btn-primary">Create Your Event</a>
+          <a href="demo.html" class="btn btn-ghost">View Live Demo</a>
+        </div>
+        <div class="hero-meta">
+          <div><strong>1,200+</strong>events seated</div>
+          <div><strong>60 sec</strong>average lookup</div>
+          <div><strong>0</strong>printed boards</div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="mock-stack">
+          <div class="mock-card mock-dash">
+            <div class="mock-dash-row"><span>Checked in</span><span>381 / 486</span></div>
+            <div class="mock-dash-bar"><span style="width:78%"></span></div>
+            <div class="mock-dash-row"><span>Tables assigned</span><span>44 / 48</span></div>
+            <div class="mock-dash-bar"><span style="width:92%"></span></div>
+          </div>
+          <div class="mock-card mock-phone">
+            <div class="mock-notch"></div>
+            <p class="mock-welcome">Welcome</p>
+            <p class="mock-name">Sarah Johnson</p>
+            <div class="mock-table">
+              <span>Your table</span>
+              <strong>08</strong>
+            </div>
+            <p class="mock-seat">Seat 4 &middot; with Michael, Grace, David</p>
+          </div>
+          <div class="mock-card mock-qr">
+            <div class="mock-qr-grid"></div>
+            <p>Scan to find your seat</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="trust-strip">
+    <div class="container">
+      <p>Trusted for weddings, galas &amp; conferences</p>
+      <div class="trust-marks">
+        <span>The Grand Linden</span>
+        <span>Harrow &amp; Vine</span>
+        <span>Foster Hall</span>
+        <span>Milbrook Events</span>
+        <span>Casa Delmar</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section problem">
+    <div class="container">
+      <div class="grid-2" style="align-items:start;">
+        <div class="section-head" style="margin-bottom:0;">
+          <span class="section-kicker">The old way</span>
+          <h2>Seating charts weren&rsquo;t built for how guests actually arrive.</h2>
+          <p style="margin-top:18px;">A printed board looks elegant in a photo and terrible in practice — a crowd forms, names get missed, and someone always changes seats the morning of.</p>
+        </div>
+        <div class="problem-list">
+          <div class="problem-item">
+            <span class="num">01</span>
+            <div><h4>Crowded seating boards</h4><p>Everyone arrives in the same ten minutes and reads the same tiny print.</p></div>
+          </div>
+          <div class="problem-item">
+            <span class="num">02</span>
+            <div><h4>Long entrance lines</h4><p>Guests wait behind each other just to find one name in a long list.</p></div>
+          </div>
+          <div class="problem-item">
+            <span class="num">03</span>
+            <div><h4>Last-minute changes</h4><p>A cancellation the night before means reprinting — or crossing names out by hand.</p></div>
+          </div>
+          <div class="problem-item">
+            <span class="num">04</span>
+            <div><h4>Printing costs &amp; waste</h4><p>Boards, place cards and table signs that get used once and thrown away.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-head center">
+        <span class="section-kicker">How it works</span>
+        <h2>From spreadsheet to seated in four steps.</h2>
+        <p class="lead" style="margin:16px auto 0;">No app to install, nothing for guests to download. Just a name and a QR code.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <span class="step-num">01</span>
+          <h4>Add guests</h4>
+          <p>Type them in one by one, or import your full list from a spreadsheet in a few clicks.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">02</span>
+          <h4>Assign tables</h4>
+          <p>Drag guests onto a visual floor of tables, or let the optimizer suggest an arrangement.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">03</span>
+          <h4>Customize</h4>
+          <p>Match your event with a template, your colors, your logo and your own welcome message.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">04</span>
+          <h4>Share your QR code</h4>
+          <p>Print it once, post it at the entrance, and every future change updates instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Everything included</span>
+        <h2>One platform for the whole seating workflow.</h2>
+      </div>
+      <div class="grid-4">
+        <div class="feature-card highlight">
+          <div class="feature-icon">◎</div>
+          <h4>QR lookup</h4>
+          <p>One code, printed once, that always reflects the current arrangement.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⇄</div>
+          <h4>Real-time updates</h4>
+          <p>Move a guest and the change is live for them immediately — no reprint.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">▤</div>
+          <h4>CSV import</h4>
+          <p>Bring your existing guest list in, map the columns, and you&rsquo;re seated.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✦</div>
+          <h4>AI seating optimizer</h4>
+          <p>Set your rules — families together, VIPs near the stage — and review suggestions before anything changes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">◫</div>
+          <h4>Visual table builder</h4>
+          <p>Drag, resize and rotate round, square and rectangular tables on a real floor plan.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">◐</div>
+          <h4>Privacy mode</h4>
+          <p>Choose whether guests see their tablemates, or only their own seat.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✓</div>
+          <h4>Check-in</h4>
+          <p>Track arrivals at the door with a live count and a searchable list.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">▣</div>
+          <h4>Schedule &amp; menu</h4>
+          <p>Give guests the run of show and tonight&rsquo;s menu, right where they find their seat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENT TYPES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">Built for any occasion</span>
+        <h2>From an intimate dinner to a thousand-seat conference.</h2>
+      </div>
+      <div class="event-types">
+        <span class="event-type-chip">Weddings</span>
+        <span class="event-type-chip">Corporate events</span>
+        <span class="event-type-chip">Galas</span>
+        <span class="event-type-chip">Conferences</span>
+        <span class="event-type-chip">Graduations</span>
+        <span class="event-type-chip">Birthdays</span>
+        <span class="event-type-chip">Banquets</span>
+        <span class="event-type-chip">Private events</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES -->
+  <section class="section" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head" style="display:flex; align-items:flex-end; justify-content:space-between; max-width:none;">
+        <div>
+          <span class="section-kicker">Templates</span>
+          <h2>Start from a look, then make it yours.</h2>
+        </div>
+        <a href="templates.html" class="btn btn-ghost">View all templates</a>
+      </div>
+      <div class="grid-3">
+        <div class="template-card">
+          <div class="template-swatch" style="background:linear-gradient(160deg,#F3EEE1,#E2DBC7);"></div>
+          <div class="template-info">
+            <h4>Elegant Wedding</h4>
+            <p>Soft ivory, brass accents, serif type.</p>
+            <a href="templates.html" class="btn btn-ghost btn-sm btn-block">Preview</a>
+          </div>
+        </div>
+        <div class="template-card">
+          <div class="template-swatch" style="background:linear-gradient(160deg,#16332A,#24463A);"></div>
+          <div class="template-info">
+            <h4>Luxury Gala</h4>
+            <p>Deep emerald with foil-brass detailing.</p>
+            <a href="templates.html" class="btn btn-ghost btn-sm btn-block">Preview</a>
+          </div>
+        </div>
+        <div class="template-card">
+          <div class="template-swatch" style="background:linear-gradient(160deg,#FFFFFF,#E9E4D6);"></div>
+          <div class="template-info">
+            <h4>Modern Minimal</h4>
+            <p>Clean lines for corporate &amp; conference seating.</p>
+            <a href="templates.html" class="btn btn-ghost btn-sm btn-block">Preview</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-head center">
+        <span class="section-kicker">Pricing</span>
+        <h2>Pay per event, not per month.</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Free</h3>
+          <p>For small, simple gatherings.</p>
+          <div class="price-amount">$0</div>
+          <p class="price-limit">Up to 50 guests</p>
+          <ul class="price-features">
+            <li><span class="check">✓</span>Digital seating</li>
+            <li><span class="check">✓</span>QR code</li>
+            <li><span class="check">✓</span>Guest search</li>
+            <li><span class="check">✓</span>Basic customization</li>
+            <li><span class="check">✓</span>Real-time updates</li>
+          </ul>
+          <a href="register.html" class="btn btn-ghost btn-block">Start free</a>
+        </div>
+        <div class="price-card featured">
+          <span class="price-badge">Most popular</span>
+          <h3>Standard</h3>
+          <p>For weddings and mid-size events.</p>
+          <div class="price-amount">$49.99<span>/event</span></div>
+          <p class="price-limit">Up to 500 guests</p>
+          <ul class="price-features">
+            <li><span class="check">✓</span>Everything in Free</li>
+            <li><span class="check">✓</span>CSV import</li>
+            <li><span class="check">✓</span>Advanced customization</li>
+            <li><span class="check">✓</span>Privacy controls</li>
+            <li><span class="check">✓</span>Tablemate controls</li>
+            <li><span class="check">✓</span>Multiple templates</li>
+          </ul>
+          <a href="register.html" class="btn btn-primary btn-block">Create Your Event</a>
+        </div>
+        <div class="price-card">
+          <h3>Extended</h3>
+          <p>For galas and full-scale conferences.</p>
+          <div class="price-amount">$99.99<span>/event</span></div>
+          <p class="price-limit">Up to 1,000 guests</p>
+          <ul class="price-features">
+            <li><span class="check">✓</span>Everything in Standard</li>
+            <li><span class="check">✓</span>Floorplan, menu &amp; schedule</li>
+            <li><span class="check">✓</span>Check-in &amp; guest photos</li>
+            <li><span class="check">✓</span>AI seating optimizer</li>
+            <li><span class="check">✓</span>Smart seating rules</li>
+          </ul>
+          <a href="register.html" class="btn btn-ghost btn-block">Start free</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-kicker">From organizers</span>
+        <h2>What people say after their event.</h2>
+      </div>
+      <span class="sample-tag">Sample testimonials — for demonstration only</span>
+      <div class="grid-3">
+        <div class="testimonial-card">
+          <p class="quote">&ldquo;No line at the door for the first time in three weddings we&rsquo;ve planned this year.&rdquo;</p>
+          <div class="testimonial-who">
+            <div class="testimonial-avatar"></div>
+            <div><strong>Naomi R.</strong><span>Wedding planner</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="quote">&ldquo;We moved 40 people between tables the morning of, and nobody noticed but us.&rdquo;</p>
+          <div class="testimonial-who">
+            <div class="testimonial-avatar"></div>
+            <div><strong>Daniel K.</strong><span>Events lead, Foster Hall</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="quote">&ldquo;The optimizer caught two seating conflicts we would have missed entirely.&rdquo;</p>
+          <div class="testimonial-who">
+            <div class="testimonial-avatar"></div>
+            <div><strong>Priya S.</strong><span>Conference organizer</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ TEASER -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="section-kicker">Questions</span>
+        <h2>Good to know before you start.</h2>
+      </div>
+      <div class="faq-list" style="max-width:760px; margin:0 auto;">
+        <div class="faq-item" data-faq-item>
+          <button class="faq-question" aria-expanded="false"><span>Do my guests need to install anything?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>No. Guests open a link from the QR code in their phone&rsquo;s browser — nothing to download.</p></div>
+        </div>
+        <div class="faq-item" data-faq-item>
+          <button class="faq-question" aria-expanded="false"><span>What happens if I move a guest the morning of the event?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>The change is live immediately. Your printed QR sign never needs to be reprinted.</p></div>
+        </div>
+        <div class="faq-item" data-faq-item>
+          <button class="faq-question" aria-expanded="false"><span>Can guests see who else is at their table?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>That&rsquo;s up to you. Tablemate visibility can be switched on or off per event.</p></div>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top:36px;">
+        <a href="faq.html" class="btn btn-ghost">Read the full FAQ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <span class="section-kicker">Ready when you are</span>
+      <h2>Create your first event in the next five minutes.</h2>
+      <p>Free to start, no credit card required.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-on-dark">Create Your Event</a>
+        <a href="demo.html" class="btn btn-ghost" style="border-color:var(--border-dark); color:var(--text-on-dark);">View Live Demo</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+        <p>Digital seating and guest experience for events of every size.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="templates.html">Templates</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="demo.html">Live Demo</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="register.html">Create Your Event</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 SeatFlow. All rights reserved.</span>
+      <span>Sample data shown throughout this site is for demonstration only.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

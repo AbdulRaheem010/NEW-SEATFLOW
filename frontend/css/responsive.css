@@ -1,0 +1,64 @@
+/* ==========================================================================
+   SEATFLOW — RESPONSIVE RULES
+   Breakpoints: 1280 / 1024 / 834 / 768 / 414 / 390 / 375 / 320
+   ========================================================================== */
+
+@media (max-width: 1280px) {
+  .container { padding: 0 28px; }
+  .mock-dash { right: -6px; width: 190px; }
+}
+
+@media (max-width: 1024px) {
+  .hero .container { grid-template-columns: 1fr; }
+  .hero-visual { order: -1; }
+  .mock-stack { max-width: 380px; margin: 0 auto 20px; }
+  .grid-3, .steps-grid, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .price-card.featured { transform: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+@media (max-width: 834px) {
+  .nav-links { display: none; }
+  .nav-actions .login-link { display: none; }
+  .nav-toggle { display: flex; }
+  .section { padding: 72px 0; }
+  .problem-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .compare-table { font-size: 0.82rem; }
+  .compare-table th, .compare-table td { padding: 12px 10px; }
+}
+
+@media (max-width: 414px) {
+  .container { padding: 0 20px; }
+  h1 { font-size: 2.1rem; }
+  .hero { padding: 48px 0 64px; }
+  .grid-3, .steps-grid, .pricing-grid, .grid-4 { grid-template-columns: 1fr; }
+  .price-card.featured { order: -1; }
+  .hero-actions .btn, .final-cta .btn { width: 100%; }
+  .hero-actions, .final-cta .hero-actions { flex-direction: column; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .mock-dash { display: none; }
+  .mock-qr { width: 140px; bottom: 0; }
+  .trust-strip .container { flex-direction: column; align-items: flex-start; gap: 18px; }
+}
+
+@media (max-width: 375px) {
+  .price-amount { font-size: 2.2rem; }
+  .mock-phone { width: 100%; }
+}
+
+@media (max-width: 320px) {
+  .container { padding: 0 16px; }
+  .brand { font-size: 1.15rem; }
+  h1 { font-size: 1.85rem; }
+}
+
+/* Print (used by qr-code / seating-summary / guest-list pages later) */
+@media print {
+  .site-header, .site-footer, .nav-toggle, .mobile-drawer { display: none !important; }
+}

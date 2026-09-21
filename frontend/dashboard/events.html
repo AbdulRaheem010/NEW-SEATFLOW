@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events — SeatFlow</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <aside class="app-sidebar">
+    <a href="../index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-link"><span class="dot"></span>Overview</a>
+
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Events</p>
+        <a href="events.html" class="sidebar-link active"><span class="dot"></span>All Events</a>
+        <a href="create-event.html" class="sidebar-link"><span class="dot"></span>Create Event</a>
+      </div>
+
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Workspace</p>
+        <a href="templates.html" class="sidebar-link"><span class="dot"></span>Templates</a>
+        <a href="analytics.html" class="sidebar-link"><span class="dot"></span>Analytics</a>
+        <a href="billing.html" class="sidebar-link"><span class="dot"></span>Billing</a>
+      </div>
+
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Account</p>
+        <a href="settings.html" class="sidebar-link"><span class="dot"></span>Settings</a>
+        <a href="../faq.html" class="sidebar-link"><span class="dot"></span>Help</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user-avatar" data-user-initial>U</div>
+      <div class="sidebar-user-meta"><strong data-user-name>Organizer</strong><span>Standard plan</span></div>
+      <button class="sidebar-logout" data-logout>Log out</button>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="sidebar-toggle-mobile" data-sidebar-toggle aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        <h1>Events</h1>
+      </div>
+      <div class="topbar-actions">
+        <a href="create-event.html" class="btn btn-primary btn-sm">Create Event</a>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <div class="toolbar">
+        <input type="search" class="search-input" placeholder="Search by name or venue\u2026" data-event-search>
+        <select class="select-input" data-status-filter>
+          <option value="all">All statuses</option>
+          <option value="live">Live</option>
+          <option value="draft">Draft</option>
+        </select>
+        <select class="select-input" data-sort-select>
+          <option value="date-asc">Date \u2013 soonest first</option>
+          <option value="date-desc">Date \u2013 latest first</option>
+          <option value="name-asc">Name \u2013 A to Z</option>
+          <option value="guests-desc">Guest count \u2013 highest first</option>
+        </select>
+      </div>
+
+      <div class="event-card-list" data-event-list></div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../js/dashboard.js"></script>
+<script type="module" src="../js/events.js"></script>
+</body>
+</html>

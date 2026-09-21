@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Event — SeatFlow</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <aside class="app-sidebar">
+    <a href="../index.html" class="brand"><span class="brand-mark"></span>SeatFlow</a>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-link"><span class="dot"></span>Overview</a>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Events</p>
+        <a href="events.html" class="sidebar-link"><span class="dot"></span>All Events</a>
+        <a href="create-event.html" class="sidebar-link active"><span class="dot"></span>Create Event</a>
+      </div>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Workspace</p>
+        <a href="templates.html" class="sidebar-link"><span class="dot"></span>Templates</a>
+        <a href="analytics.html" class="sidebar-link"><span class="dot"></span>Analytics</a>
+        <a href="billing.html" class="sidebar-link"><span class="dot"></span>Billing</a>
+      </div>
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">Account</p>
+        <a href="settings.html" class="sidebar-link"><span class="dot"></span>Settings</a>
+        <a href="../faq.html" class="sidebar-link"><span class="dot"></span>Help</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user-avatar" data-user-initial>U</div>
+      <div class="sidebar-user-meta"><strong data-user-name>Organizer</strong><span>Standard plan</span></div>
+      <button class="sidebar-logout" data-logout>Log out</button>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="sidebar-toggle-mobile" data-sidebar-toggle aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        <h1>Create Event</h1>
+      </div>
+      <div class="topbar-actions">
+        <a href="events.html" class="btn btn-ghost btn-sm">Cancel</a>
+      </div>
+    </header>
+
+    <div class="app-content" data-wizard>
+      <div class="wizard-progress" data-wizard-progress></div>
+
+      <!-- STEP 1 — Event Details -->
+      <div class="wizard-panel" data-wizard-panel>
+        <h2>Event details</h2>
+        <p class="lead">The basics — you can change any of this later.</p>
+
+        <div class="form-field">
+          <label for="eventName">Event name</label>
+          <input type="text" id="eventName" placeholder="e.g. Alex &amp; Maria's Wedding">
+          <p class="form-error"></p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="eventType">Event type</label>
+            <select id="eventType">
+              <option value="">Select a type</option>
+              <option>Wedding</option>
+              <option>Corporate</option>
+              <option>Gala</option>
+              <option>Conference</option>
+              <option>Birthday</option>
+              <option>Graduation</option>
+              <option>Banquet</option>
+              <option>Private</option>
+              <option>Other</option>
+            </select>
+            <p class="form-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="eventDate">Event date</label>
+            <input type="date" id="eventDate">
+            <p class="form-error"></p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="eventStart">Start time</label>
+            <input type="time" id="eventStart" value="17:00">
+          </div>
+          <div class="form-field">
+            <label for="eventEnd">End time</label>
+            <input type="time" id="eventEnd" value="22:00">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="eventVenue">Venue</label>
+          <input type="text" id="eventVenue" placeholder="e.g. The Grand Linden">
+          <p class="form-error"></p>
+        </div>
+
+        <div class="form-field">
+          <label for="eventTimezone">Timezone</label>
+          <select id="eventTimezone">
+            <option value="">Use my current timezone</option>
+            <option>WAT (UTC+1)</option>
+            <option>GMT (UTC+0)</option>
+            <option>EST (UTC-5)</option>
+            <option>PST (UTC-8)</option>
+            <option>CET (UTC+1)</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="eventDescription">Description</label>
+          <textarea id="eventDescription" placeholder="A short description guests may see on the event page."></textarea>
+        </div>
+      </div>
+
+      <!-- STEP 2 — Guests -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Guests</h2>
+        <p class="lead">Add a few guests now — you can import a full spreadsheet from the Guests page after publishing.</p>
+
+        <form data-guest-add-form class="guest-add-row">
+          <input type="text" id="wizardGuestFirst" placeholder="First name">
+          <input type="text" id="wizardGuestLast" placeholder="Last name">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+
+        <div class="guest-mini-list" data-wizard-guest-list></div>
+      </div>
+
+      <!-- STEP 3 — Tables -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Tables</h2>
+        <p class="lead">Lay out your tables and assign guests.</p>
+        <div class="wizard-placeholder">
+          <h4>Table layout arrives with the seating builder</h4>
+          <p>Table creation and the visual floor editor ship in Phase 3. You can publish this event now and add tables from the dashboard afterward.</p>
+        </div>
+      </div>
+
+      <!-- STEP 4 — Seating -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Seating</h2>
+        <p class="lead">Drag and drop guests onto your tables.</p>
+        <div class="wizard-placeholder">
+          <h4>The seating builder ships in Phase 3</h4>
+          <p>Once tables exist, you'll assign guests here with drag-and-drop or the accessible assignment flow.</p>
+        </div>
+      </div>
+
+      <!-- STEP 5 — Branding -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Branding</h2>
+        <p class="lead">Match the guest experience to your event.</p>
+        <div class="wizard-placeholder">
+          <h4>Branding tools ship in Phase 5</h4>
+          <p>Logo, colors, fonts and a live guest-page preview will live here.</p>
+        </div>
+      </div>
+
+      <!-- STEP 6 — Guest Experience -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Guest experience</h2>
+        <p class="lead">Choose what guests see after they find their seat.</p>
+        <div class="wizard-placeholder">
+          <h4>Schedule, menu, floorplan &amp; privacy settings ship in Phase 5</h4>
+          <p>You'll be able to turn tablemate visibility, countdown, and other guest-page sections on or off here.</p>
+        </div>
+      </div>
+
+      <!-- STEP 7 — Publish -->
+      <div class="wizard-panel" data-wizard-panel style="display:none;">
+        <h2>Publish</h2>
+        <p class="lead">Review your event before it goes live.</p>
+        <div class="summary-list" data-wizard-summary></div>
+      </div>
+
+      <div class="wizard-actions">
+        <button type="button" class="btn btn-ghost" data-wizard-back>Back</button>
+        <button type="button" class="btn btn-primary" data-wizard-next>Next</button>
+        <button type="button" class="btn btn-brass" data-wizard-publish style="display:none;">Publish Event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../js/dashboard.js"></script>
+<script type="module" src="../js/events.js"></script>
+</body>
+</html>
