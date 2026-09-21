@@ -593,3 +593,16 @@
     min-width: 40px !important;
   }
 }
+
+/* Explicit glyph hamburger — avoids span/font rendering issues on mobile browsers. */
+@media (max-width: 1024px) {
+  .sidebar-toggle-mobile {
+    font-family: Arial, sans-serif !important;
+    font-size: 25px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    color: var(--ink) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+}
