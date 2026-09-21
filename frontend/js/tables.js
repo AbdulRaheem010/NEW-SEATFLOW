@@ -4,7 +4,6 @@
 
 import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
-import { getEvents } from './state.js';
 import { isRequired, setFieldError, toast, uid } from './utils.js';
 
 async function currentEvent() {
