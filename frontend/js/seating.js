@@ -235,37 +235,60 @@ async function initSeatingPage() {
         await load();
       });
 
-      // Reposition via pointer drag (separate from HTML5 guest drag-and-drop).
+      // Reposition tables with Pointer Events so mouse, pen and touch all work.
       let dragging = false, startX = 0, startY = 0, originX = 0, originY = 0;
-      node.addEventListener('mousedown', (e) => {
+      let activePointerId = null;
+
+      node.addEventListener('pointerdown', (e) => {
+        if (e.button !== undefined && e.button !== 0 && e.pointerType !== 'touch') return;
         if (tables.find((t) => t.id === tableId)?.locked) return;
         dragging = true;
-        startX = e.clientX; startY = e.clientY;
+        activePointerId = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
         const t = tables.find((t) => t.id === tableId);
-        originX = t.x; originY = t.y;
+        originX = t.x;
+        originY = t.y;
+        node.dataset.wasDragged = 'false';
         node.style.cursor = 'grabbing';
+        node.setPointerCapture?.(e.pointerId);
       });
-      document.addEventListener('mousemove', (e) => {
-        if (!dragging) return;
-        node.dataset.wasDragged = 'true';
+
+      node.addEventListener('pointermove', (e) => {
+        if (!dragging || e.pointerId !== activePointerId) return;
         const dx = (e.clientX - startX) / zoom;
         const dy = (e.clientY - startY) / zoom;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) node.dataset.wasDragged = 'true';
         node.style.left = `${originX + dx}px`;
         node.style.top = `${originY + dy}px`;
       });
-      document.addEventListener('mouseup', async (e) => {
-        if (!dragging) return;
+
+      node.addEventListener('pointerup', async (e) => {
+        if (!dragging || e.pointerId !== activePointerId) return;
         dragging = false;
+        activePointerId = null;
+        node.releasePointerCapture?.(e.pointerId);
         node.style.cursor = 'grab';
         const dx = Math.round((e.clientX - startX) / zoom);
         const dy = Math.round((e.clientY - startY) / zoom);
         if (dx === 0 && dy === 0) return;
         const table = tables.find((t) => t.id === tableId);
+        if (!table) return;
         pushHistory();
-        await apiRequest(`/events/${eventId}/tables/${tableId}`, { method: 'PATCH', body: JSON.stringify({ x: table.x + dx, y: table.y + dy }) });
+        await apiRequest(`/events/${eventId}/tables/${tableId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ x: table.x + dx, y: table.y + dy }),
+        });
         await load();
       });
-    });
+
+      node.addEventListener('pointercancel', () => {
+        if (!dragging) return;
+        dragging = false;
+        activePointerId = null;
+        node.style.cursor = 'grab';
+        renderCanvas();
+      });    });
   }
 
   /* --------------------------- Detail panel --------------------------- */
