@@ -26,13 +26,15 @@ function initUserMeta() {
   const nameEls = document.querySelectorAll('[data-user-name]');
   const initialEls = document.querySelectorAll('[data-user-initial]');
   if (user) {
-    nameEls.forEach((el) => { el.textContent = user.name; });
-    initialEls.forEach((el) => { el.textContent = user.name.charAt(0).toUpperCase(); });
+    const displayName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.name || 'Organizer';
+    nameEls.forEach((el) => { el.textContent = displayName; });
+    initialEls.forEach((el) => { el.textContent = displayName.charAt(0).toUpperCase(); });
   }
 
   document.querySelectorAll('[data-logout]').forEach((btn) => {
     btn.addEventListener('click', () => {
       logoutUser();
+      localStorage.removeItem('seatflow_token');
       window.location.href = '../login.html';
     });
   });
@@ -67,7 +69,7 @@ async function renderOverview() {
           <span class="activity-dot"></span>
           <div>
             <strong>${e.name}</strong>
-            <time>${formatDate(e.date)} \u00b7 ${e.venue}</time>
+            <time>${formatDate(e.date)} · ${e.venue}</time>
           </div>
         </div>
       `).join('');
