@@ -1,4 +1,8 @@
 const express = require('express');
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET must be configured before starting SeatFlow.');
+}
 const cors = require('cors');
 const { errorHandler, notFoundHandler } = require('./middleware/error');
 
