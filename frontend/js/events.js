@@ -82,7 +82,7 @@ async function initEventsListPage() {
     if (publishBtn) {
       const eventId = publishBtn.dataset.publishEvent;
       publishBtn.disabled = true;
-      publishBtn.textContent = 'Publishing…';
+      publishBtn.textContent = 'Creating…';
       try {
         const result = await apiRequest(`/events/${eventId}/publish`, { method: 'POST' });
         const index = events.findIndex((item) => item.id === eventId);
@@ -90,7 +90,7 @@ async function initEventsListPage() {
         render();
       } catch (err) {
         publishBtn.disabled = false;
-        publishBtn.textContent = 'Publish Event';
+        publishBtn.textContent = 'Create Event';
         toast(err.message || 'Unable to publish event.', 'error');
       }
       return;
@@ -289,7 +289,7 @@ function initCreateEventWizard() {
       for (const g of wizardState.guests) {
         await apiRequest(`/events/${event.id}/guests`, { method: 'POST', body: JSON.stringify(g) });
       }
-      toast('Event created successfully.', 'success');
+      toast('Event created as a draft. Publish it from All Events when ready.', 'success');
       setTimeout(() => { window.location.href = 'events.html'; }, 600);
     } catch (err) {
       toast('Something went wrong publishing your event.', 'error');
