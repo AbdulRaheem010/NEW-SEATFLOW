@@ -16,7 +16,7 @@ async function currentEvent() {
     if (match) return match;
   }
 
-  return events[0] || null;
+  return null;
 }
 
 function initials(g) {
@@ -33,6 +33,8 @@ async function initGuestsPage() {
 
   const event = await currentEvent();
   const eventId = event?.id || null;
+  const contextLinks = { tables: document.querySelector('a[href="tables.html"]'), seating: document.querySelector('a[href="seating.html"]') };
+  if (eventId) Object.values(contextLinks).forEach((link) => { if (link) link.href = `${link.getAttribute('href')}?event=${encodeURIComponent(eventId)}`; });
   if (!eventId) {
     document.querySelector('[data-guests-shell]').innerHTML = `
       <div class="empty-state">
