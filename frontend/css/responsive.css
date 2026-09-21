@@ -62,3 +62,144 @@
 @media print {
   .site-header, .site-footer, .nav-toggle, .mobile-drawer { display: none !important; }
 }
+
+
+/* ==========================================================================
+   DASHBOARD / APP MOBILE RESPONSIVENESS
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .app-shell { grid-template-columns: 220px minmax(0, 1fr); }
+  .app-main { min-width: 0; }
+  .dashboard-content,
+  .page-content,
+  .content-wrap { min-width: 0; }
+  .dashboard-grid,
+  .stats-grid,
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .toolbar,
+  .page-toolbar,
+  .action-bar { flex-wrap: wrap; gap: 10px; }
+}
+
+@media (max-width: 834px) {
+  .app-shell { display: block; min-height: 100vh; }
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: min(290px, 86vw);
+    transform: translateX(-105%);
+    transition: transform .25s ease;
+    overflow-y: auto;
+  }
+  .app-sidebar.is-open,
+  .app-sidebar.open,
+  body.sidebar-open .app-sidebar { transform: translateX(0); }
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,.42);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .sidebar-overlay.is-visible,
+  .sidebar-overlay.visible,
+  body.sidebar-open .sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .app-main { width: 100%; min-width: 0; }
+  .app-topbar,
+  .topbar,
+  .dashboard-header {
+    min-height: 64px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .mobile-menu-toggle,
+  [data-sidebar-toggle],
+  .sidebar-toggle { display: inline-flex !important; }
+  .dashboard-content,
+  .page-content,
+  .content-wrap { padding-left: 16px; padding-right: 16px; }
+  .dashboard-grid,
+  .stats-grid,
+  .metric-grid { grid-template-columns: 1fr 1fr; }
+  .card { max-width: 100%; }
+  .table-wrap,
+  .table-responsive,
+  .data-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table { min-width: 640px; }
+  .modal,
+  .dialog {
+    width: min(94vw, 640px);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-grid,
+  .stats-grid,
+  .metric-grid { grid-template-columns: 1fr; }
+  .dashboard-content,
+  .page-content,
+  .content-wrap { padding-left: 14px; padding-right: 14px; }
+  .page-header,
+  .dashboard-header,
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .toolbar,
+  .page-toolbar,
+  .action-bar,
+  .form-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .toolbar > *,
+  .page-toolbar > *,
+  .action-bar > * {
+    max-width: 100%;
+  }
+  .btn { min-height: 42px; }
+  .form-grid,
+  .two-column,
+  .form-row { grid-template-columns: 1fr; }
+  .input,
+  input,
+  select,
+  textarea { max-width: 100%; }
+  .modal,
+  .dialog { width: calc(100vw - 24px); }
+  .modal-actions,
+  .dialog-actions { flex-wrap: wrap; }
+  .modal-actions .btn,
+  .dialog-actions .btn { flex: 1 1 140px; }
+}
+
+@media (max-width: 430px) {
+  .app-topbar,
+  .topbar,
+  .dashboard-header { padding-left: 12px; padding-right: 12px; }
+  .dashboard-content,
+  .page-content,
+  .content-wrap { padding-left: 12px; padding-right: 12px; }
+  .page-title,
+  .dashboard-title { font-size: 1.45rem; }
+  .table-wrap,
+  .table-responsive,
+  .data-table-wrap { margin-right: -12px; width: calc(100% + 24px); }
+}
