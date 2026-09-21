@@ -282,14 +282,30 @@ async function initSeatingPage() {
   document.querySelector('[data-undo]')?.addEventListener('click', async () => {
     if (undoStack.length === 0) return;
     redoStack.push(snapshot());
-    restore(undoStack.pop());
-    await load();
+    const state = undoStack.pop();
+    restore(state);
+    try {
+      await persistSnapshot(state);
+      await load();
+      toast('Undo applied.', 'success');
+    } catch (err) {
+      toast(err.message || 'Undo could not be saved.', 'error');
+      await load();
+    }
   });
   document.querySelector('[data-redo]')?.addEventListener('click', async () => {
     if (redoStack.length === 0) return;
     undoStack.push(snapshot());
-    restore(redoStack.pop());
-    await load();
+    const state = redoStack.pop();
+    restore(state);
+    try {
+      await persistSnapshot(state);
+      await load();
+      toast('Redo applied.', 'success');
+    } catch (err) {
+      toast(err.message || 'Redo could not be saved.', 'error');
+      await load();
+    }
   });
 
   document.querySelector('[data-auto-arrange]')?.addEventListener('click', async () => {
