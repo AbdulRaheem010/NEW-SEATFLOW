@@ -606,3 +606,83 @@
     -webkit-font-smoothing: antialiased !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   FINAL MOBILE CONTENT POLISH
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .app-topbar {
+    gap: 10px !important;
+    padding: 0 12px !important;
+  }
+
+  .app-topbar > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-actions {
+    flex: 0 0 auto !important;
+    gap: 6px !important;
+    max-width: 48% !important;
+  }
+
+  .topbar-actions .btn {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .toolbar {
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .toolbar .search-input,
+  .toolbar .select-input {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .event-row-card {
+    padding: 16px !important;
+  }
+
+  .event-row-card .event-row-top {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .event-row-card .row-actions {
+    flex-wrap: wrap;
+  }
+
+  .wizard-actions {
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .wizard-actions .btn {
+    flex: 1 1 140px;
+  }
+
+  .modal-overlay {
+    padding: 12px !important;
+  }
+
+  .modal-box {
+    max-height: calc(100dvh - 24px) !important;
+    overflow-y: auto !important;
+    padding: 20px !important;
+  }
+
+  .modal-actions {
+    flex-wrap: wrap !important;
+  }
+
+  .modal-actions .btn {
+    flex: 1 1 120px;
+  }
+}
