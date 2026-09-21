@@ -14,10 +14,13 @@ import { uid } from './utils.js';
 // Flip to false once the backend is deployed and reachable at API_BASE_URL.
 export const DEMO_MODE = false;
 
-// Public config only — no secrets belong here (see section 61 of the spec).
-// After deploying the backend (e.g. to Render), replace this with its URL,
-// e.g. 'https://seatflow-backend.onrender.com/api/v1'.
-export const API_BASE_URL = (window.SEATFLOW_API_BASE_URL || 'http://localhost:4000/api/v1').replace(/\/$/, '');
+// Public config only — no secrets belong here.
+// The live Render backend is the default; window.SEATFLOW_API_BASE_URL can
+// still override it if a different backend URL is needed later.
+export const API_BASE_URL = (
+  window.SEATFLOW_API_BASE_URL ||
+  'https://seatflow-backend-1q25.onrender.com/api/v1'
+).replace(/\/$/, '');
 
 seedDemoDataIfEmpty();
 
