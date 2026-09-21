@@ -128,23 +128,32 @@ function initForgotPasswordForm() {
   if (!form) return;
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = form.querySelector('#email');
 
-    if (!isValidEmail(email.value)) { setFieldError(email, 'Enter a valid email address.'); showStatus(form, 'Please fix the highlighted fields.', 'error'); return; }
+    if (!isValidEmail(email.value)) {
+      setFieldError(email, 'Enter a valid email address.');
+      showStatus(form, 'Please fix the highlighted fields.', 'error');
+      return;
+    }
     setFieldError(email, null);
-
-    setLoading(submitBtn, true, 'Sending link\u2026', 'Send reset link');
+    setLoading(submitBtn, true, 'Sending link…', 'Send reset link');
     showStatus(form, '', '');
 
-    setTimeout(() => {
-      showStatus(form, `If an account exists for ${email.value}, a reset link is on its way.`, 'success');
-      setLoading(submitBtn, false, 'Sending link\u2026', 'Send reset link');
-    }, 700);
+    try {
+      const result = await apiRequest('/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email: email.value.trim() }),
+      });
+      showStatus(form, result.message || 'If an account exists, a reset link has been sent.', 'success');
+    } catch (error) {
+      showStatus(form, error.message || 'Unable to send reset link. Please try again.', 'error');
+    } finally {
+      setLoading(submitBtn, false, 'Sending link…', 'Send reset link');
+    }
   });
 }
-
 /** Redirect signed-out visitors away from dashboard/admin pages. */
 export function requireAuth() {
   if (!getCurrentUser() || !localStorage.getItem('seatflow_token')) {
