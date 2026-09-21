@@ -78,13 +78,8 @@ async function renderOverview() {
 
   const activityFeed = document.querySelector('[data-activity-feed]');
   if (activityFeed) {
-    const items = [
-      events[0] ? `Guest list updated for ${events[0].name}` : null,
-      events[2] ? `Check-in started for ${events[2].name}` : null,
-      events[1] ? `${events[1].name} saved as draft` : null,
-    ].filter(Boolean);
-    activityFeed.innerHTML = items.length
-      ? items.map((text) => `<div class="activity-row"><span class="activity-dot"></span><div><strong>${text}</strong><time>Today</time></div></div>`).join('')
+    activityFeed.innerHTML = events.length
+      ? events.slice(0, 5).map((event) => `<div class="activity-row"><span class="activity-dot"></span><div><strong>${event.name}</strong><time>${formatDate(event.date)} · ${event.status === 'live' ? 'Live' : 'Draft'}</time></div></div>`).join('')
       : `<div class="guest-mini-empty">No recent activity.</div>`;
   }
 }
