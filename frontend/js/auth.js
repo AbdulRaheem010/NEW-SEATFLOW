@@ -5,6 +5,7 @@
 
 import { isValidEmail, isRequired, setFieldError, toast } from './utils.js';
 import { setCurrentUser, getCurrentUser } from './state.js';
+import { apiRequest } from './api.js';
 
 function showStatus(form, message, type) {
   const status = form.querySelector('.form-status');
