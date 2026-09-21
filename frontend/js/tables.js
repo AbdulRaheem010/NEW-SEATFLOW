@@ -7,23 +7,29 @@ import { apiRequest } from './api.js';
 import { getEvents } from './state.js';
 import { isRequired, setFieldError, toast, uid } from './utils.js';
 
-function currentEventId() {
+async function currentEvent() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('event');
-  const events = getEvents();
+  const { events = [] } = await apiRequest('/events');
+
   if (requested) {
     const match = events.find((e) => e.id === requested || e.slug === requested);
-    if (match) return match.id;
+    if (match) return match;
   }
-  return events[0]?.id || null;
+
+  return events[0] || null;
 }
 
 async function initTablesPage() {
   const grid = document.querySelector('[data-table-grid]');
   if (!grid) return;
 
-  const eventId = currentEventId();
-  if (!eventId) return;
+  const event = await currentEvent();
+  const eventId = event?.id || null;
+  if (!eventId) {
+    document.querySelector('[data-tables-empty]').style.display = 'block';
+    return;
+  }
 
   let tables = [];
   let guests = [];
