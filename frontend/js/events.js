@@ -59,12 +59,52 @@ async function initEventsListPage() {
           <div><strong>${e.guestCount ? Math.round((e.assignedCount / e.guestCount) * 100) : 0}%</strong>Assigned</div>
           <div><strong>${e.qrActive ? 'Active' : 'Inactive'}</strong>QR Status</div>
         </div>
-        <a href="guests.html?event=${e.id}" class="btn btn-primary btn-sm btn-block">Manage Event</a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <a href="guests.html?event=${e.id}" class="btn btn-primary btn-sm">Manage Event</a>
+          ${e.status === 'live' ? `<button type="button" class="btn btn-ghost btn-sm" data-show-qr="${e.slug}" data-event-name="${e.name.replace(/"/g, '&quot;')}">View QR</button>` : `<button type="button" class="btn btn-ghost btn-sm" data-publish-event="${e.id}">Publish Event</button>`}
+        </div>
       </div>
     `).join('');
   }
 
   render();
+
+  listEl.addEventListener('click', async (e) => {
+    const publishBtn = e.target.closest('[data-publish-event]');
+    const qrBtn = e.target.closest('[data-show-qr]');
+
+    if (publishBtn) {
+      const eventId = publishBtn.dataset.publishEvent;
+      publishBtn.disabled = true;
+      publishBtn.textContent = 'Publishing…';
+      try {
+        const result = await apiRequest(`/events/${eventId}/publish`, { method: 'POST' });
+        const index = events.findIndex((item) => item.id === eventId);
+        if (index !== -1) events[index] = { ...events[index], ...result.event, status: 'live', qrActive: true };
+        render();
+      } catch (err) {
+        publishBtn.disabled = false;
+        publishBtn.textContent = 'Publish Event';
+        toast(err.message || 'Unable to publish event.', 'error');
+      }
+      return;
+    }
+
+    if (qrBtn) {
+      const slug = qrBtn.dataset.showQr;
+      const eventName = qrBtn.dataset.eventName || 'Event';
+      const publicUrl = `${window.location.origin}/public-event.html?event=${encodeURIComponent(slug)}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=20&data=${encodeURIComponent(publicUrl)}`;
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999;';
+      modal.innerHTML = `<div style="background:var(--surface,#fff);color:var(--text,#111);max-width:520px;width:100%;padding:28px;border-radius:18px;text-align:center;"><h2 style="margin:0 0 8px;">${eventName}</h2><p style="margin:0 0 18px;">Scan this QR code to open the guest event page.</p><img src="${qrUrl}" alt="QR code for ${eventName}" style="width:min(360px,100%);height:auto;border-radius:10px;background:#fff;padding:10px;"><p style="font-size:13px;word-break:break-all;margin:16px 0;">${publicUrl}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><a class="btn btn-primary btn-sm" href="${qrUrl}" target="_blank" rel="noopener">Open QR</a><button type="button" class="btn btn-ghost btn-sm" data-close-qr>Close</button></div></div>`;
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal || event.target.closest('[data-close-qr]')) modal.remove();
+      });
+      document.body.appendChild(modal);
+    }
+  });
+
   searchInput?.addEventListener('input', debounce(render, 150));
   statusFilter?.addEventListener('change', render);
   sortSelect?.addEventListener('change', render);
