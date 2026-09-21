@@ -1,7 +1,5 @@
 // SeatFlow — auth.js
-// Client-side validation and demo authentication for login, register and
-// forgot-password. In demo mode, "signing in" just sets a local user record —
-// this is the seam a real Supabase/Auth provider will replace.
+// Client-side validation and live SeatFlow authentication for login, register and forgot-password.
 
 import { isValidEmail, isRequired, setFieldError, toast } from './utils.js';
 import { setCurrentUser, getCurrentUser } from './state.js';
