@@ -93,6 +93,7 @@ async function renderOverview() {
 
 document.addEventListener('DOMContentLoaded', () => {
   requireAuth();
+  initDashboardBrand();
   initSidebarDrawer();
   initUserMeta();
   renderOverview();
