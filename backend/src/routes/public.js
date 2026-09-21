@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/events/:slug', asyncHandler(async (req, res) => {
   const result = await pool.query(
     `SELECT slug, name, type, date, start_time, end_time, venue, description, timezone, logo_url, theme, show_tablemates
-     FROM events WHERE slug = $1 AND status = 'live'`,
+     FROM events WHERE slug = $1 AND status = 'live' AND qr_active = true`,
     [req.params.slug]
   );
   const event = result.rows[0];
