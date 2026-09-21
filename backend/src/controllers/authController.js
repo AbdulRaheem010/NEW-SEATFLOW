@@ -65,13 +65,19 @@ const resetPassword=asyncHandler(async(req,res)=>{
   const result=await pool.query('SELECT id,user_id FROM password_reset_tokens WHERE token_hash=$1 AND expires_at>now()',[tokenHash]);
   const resetToken=result.rows[0];
   if(!resetToken)return res.status(400).json({error:'This reset link is invalid or has expired.'});
-  const passwordHash=await bcrypt.hash(password,10);
-  await pool.query('BEGIN');
+  const passwordHash = await bcrypt.hash(password, 10);
+  const client = await pool.connect();
   try {
-    await pool.query('UPDATE users SET password_hash=$1 WHERE id=$2',[passwordHash,resetToken.user_id]);
-    await pool.query('DELETE FROM password_reset_tokens WHERE user_id=$1',[resetToken.user_id]);
-    await pool.query('COMMIT');
-  } catch(error) { await pool.query('ROLLBACK'); throw error; }
+    await client.query('BEGIN');
+    await client.query('UPDATE users SET password_hash=$1 WHERE id=$2',[passwordHash,resetToken.user_id]);
+    await client.query('DELETE FROM password_reset_tokens WHERE user_id=$1',[resetToken.user_id]);
+    await client.query('COMMIT');
+  } catch(error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
   res.json({message:'Your password has been reset. You can now log in.'});
 });
 module.exports={register,login,me,forgotPassword,resetPassword};
