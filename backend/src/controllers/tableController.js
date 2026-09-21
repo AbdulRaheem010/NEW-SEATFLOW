@@ -36,10 +36,18 @@ const createTable = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: 'Event not found.' });
   }
   const { name, capacity, shape, x, y, width, height, rotation, color } = req.body;
+  const normalizedCapacity = Number(capacity ?? 8);
+  if (!Number.isInteger(normalizedCapacity) || normalizedCapacity < 1 || normalizedCapacity > 1000) {
+    return res.status(400).json({ error: 'Table capacity must be a whole number between 1 and 1000.' });
+  }
+  const allowedShapes = ['round', 'square', 'rectangle'];
+  if (shape && !allowedShapes.includes(shape)) {
+    return res.status(400).json({ error: 'Invalid table shape.' });
+  }
   const result = await pool.query(
     `INSERT INTO tables (event_id, name, capacity, shape, x, y, width, height, rotation, color)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
-    [req.params.eventId, name || 'New Table', capacity || 8, shape || 'round', x || 0, y || 0, width || 120, height || 120, rotation || 0, color || null]
+    [req.params.eventId, name || 'New Table', normalizedCapacity, shape || 'round', x || 0, y || 0, width || 120, height || 120, rotation || 0, color || null]
   );
   res.status(201).json({ table: toPublicTable(result.rows[0]) });
 });
@@ -59,6 +67,24 @@ const updateTable = asyncHandler(async (req, res) => {
     i += 1;
   }
   if (updates.length === 0) return res.status(400).json({ error: 'No valid fields to update.' });
+
+  if (Object.prototype.hasOwnProperty.call(req.body, 'capacity')) {
+    const normalizedCapacity = Number(req.body.capacity);
+    if (!Number.isInteger(normalizedCapacity) || normalizedCapacity < 1 || normalizedCapacity > 1000) {
+      return res.status(400).json({ error: 'Table capacity must be a whole number between 1 and 1000.' });
+    }
+    const occupied = await pool.query(
+      'SELECT COUNT(*)::int AS count FROM guests WHERE event_id = $1 AND table_id = $2',
+      [req.params.eventId, req.params.tableId]
+    );
+    if (normalizedCapacity < occupied.rows[0].count) {
+      return res.status(409).json({ error: 'Capacity cannot be lower than the number of guests already seated.' });
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(req.body, 'shape') && !['round', 'square', 'rectangle'].includes(req.body.shape)) {
+    return res.status(400).json({ error: 'Invalid table shape.' });
+  }
 
   values.push(req.params.tableId, req.params.eventId);
   const result = await pool.query(
