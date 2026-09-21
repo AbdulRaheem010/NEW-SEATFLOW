@@ -6,6 +6,13 @@ import { apiRequest } from './api.js';
 import { getCurrentUser, logoutUser } from './state.js';
 import { formatDate } from './utils.js';
 
+function initDashboardBrand() {
+  // The SeatFlow logo inside authenticated pages stays inside the app.
+  document.querySelectorAll('a.brand').forEach((brand) => {
+    brand.href = 'index.html';
+  });
+}
+
 function initSidebarDrawer() {
   const toggle = document.querySelector('[data-sidebar-toggle]');
   const sidebar = document.querySelector('.app-sidebar');
