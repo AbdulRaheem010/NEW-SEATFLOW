@@ -165,3 +165,51 @@
   .table-manage-grid { grid-template-columns: 1fr; }
   .column-map-row { grid-template-columns: 1fr; }
 }
+
+/* Mobile seating and data-table safeguards */
+.data-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1024px) {
+  .seating-toolbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  .seating-toolbar .spacer {
+    display: none !important;
+  }
+
+  .seating-toolbar .btn {
+    flex: 1 1 auto;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 640px) {
+  .seating-toolbar .btn {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+
+  .seating-canvas-wrap {
+    height: 55vh !important;
+    min-height: 360px;
+  }
+
+  .seating-pane {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .guest-pool-list {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+}
