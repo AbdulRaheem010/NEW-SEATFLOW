@@ -3,6 +3,10 @@
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- Keep SeatFlow isolated from other applications sharing the same database.
+CREATE SCHEMA IF NOT EXISTS seatflow;
+SET search_path TO seatflow, public;
+
 CREATE TABLE IF NOT EXISTS users (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   first_name    TEXT NOT NULL,
