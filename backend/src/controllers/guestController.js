@@ -55,7 +55,7 @@ const createGuest = asyncHandler(async (req, res) => {
   res.status(201).json({ guest: toPublicGuest(result.rows[0]) });
 });
 
-/** Bulk import — accepts { guests: [...] } from the CSV/Excel import UI. */
+/** Bulk import — accepts { guests: [...] } from the CSV import UI. */
 const bulkImportGuests = asyncHandler(async (req, res) => {
   if (!(await assertOwnsEvent(req.params.eventId, req.user.id))) {
     return res.status(404).json({ error: 'Event not found.' });
