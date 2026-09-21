@@ -121,6 +121,56 @@ async function initRegisterForm() {
   });
 }
 
+function initResetPasswordForm() {
+  const form = document.querySelector('[data-reset-form]');
+  if (!form) return;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token') || '';
+
+  if (!token) {
+    showStatus(form, 'This reset link is missing or invalid. Request a new one.', 'error');
+    submitBtn.disabled = true;
+    return;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = form.querySelector('#password');
+    const confirmPassword = form.querySelector('#confirmPassword');
+
+    if (password.value.length < 8) {
+      setFieldError(password, 'Use at least 8 characters.');
+      showStatus(form, 'Please fix the highlighted fields.', 'error');
+      return;
+    }
+    setFieldError(password, null);
+
+    if (password.value !== confirmPassword.value) {
+      setFieldError(confirmPassword, 'Passwords don’t match.');
+      showStatus(form, 'Please fix the highlighted fields.', 'error');
+      return;
+    }
+    setFieldError(confirmPassword, null);
+
+    setLoading(submitBtn, true, 'Resetting…', 'Reset password');
+    showStatus(form, '', '');
+
+    try {
+      const result = await apiRequest('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ token, password: password.value }),
+      });
+      showStatus(form, result.message || 'Password reset successfully. Redirecting…', 'success');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+    } catch (error) {
+      showStatus(form, error.message || 'Unable to reset your password. Request a new link if needed.', 'error');
+    } finally {
+      setLoading(submitBtn, false, 'Resetting…', 'Reset password');
+    }
+  });
+}
+
 function initForgotPasswordForm() {
   const form = document.querySelector('[data-forgot-form]');
   if (!form) return;
@@ -165,4 +215,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoginForm();
   initRegisterForm();
   initForgotPasswordForm();
+  initResetPasswordForm();
 });
