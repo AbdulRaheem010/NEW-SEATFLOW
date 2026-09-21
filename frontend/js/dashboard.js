@@ -6,6 +6,10 @@ import { apiRequest } from './api.js';
 import { getCurrentUser, logoutUser } from './state.js';
 import { formatDate } from './utils.js';
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
 function initDashboardBrand() {
   // The SeatFlow logo inside authenticated pages stays inside the app.
   document.querySelectorAll('a.brand').forEach((brand) => {
@@ -75,8 +79,8 @@ async function renderOverview() {
         <div class="activity-row">
           <span class="activity-dot"></span>
           <div>
-            <strong>${e.name}</strong>
-            <time>${formatDate(e.date)} · ${e.venue}</time>
+            <strong>${escapeHtml(e.name)}</strong>
+            <time>${escapeHtml(formatDate(e.date))} · ${escapeHtml(e.venue)}</time>
           </div>
         </div>
       `).join('');
@@ -86,7 +90,7 @@ async function renderOverview() {
   const activityFeed = document.querySelector('[data-activity-feed]');
   if (activityFeed) {
     activityFeed.innerHTML = events.length
-      ? events.slice(0, 5).map((event) => `<div class="activity-row"><span class="activity-dot"></span><div><strong>${event.name}</strong><time>${formatDate(event.date)} · ${event.status === 'live' ? 'Live' : 'Draft'}</time></div></div>`).join('')
+      ? events.slice(0, 5).map((event) => `<div class="activity-row"><span class="activity-dot"></span><div><strong>${escapeHtml(event.name)}</strong><time>${escapeHtml(formatDate(event.date))} · ${event.status === 'live' ? 'Live' : 'Draft'}</time></div></div>`).join('')
       : `<div class="guest-mini-empty">No recent activity.</div>`;
   }
 }
