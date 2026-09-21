@@ -55,7 +55,7 @@ async function initEventsListPage() {
       <div class="event-row-card">
         <div class="event-row-top">
           <div>
-            <h4>${e.name}</h4>
+            <h4>${escapeHtml(e.name)}</h4>
             <p class="event-meta">${formatDate(e.date)} \u00b7 ${e.venue}</p>
           </div>
           <span class="status-pill ${e.status === 'live' ? 'live' : 'draft'}">${e.status === 'live' ? 'Live' : 'Draft'}</span>
@@ -292,9 +292,9 @@ function initCreateEventWizard() {
       toast('Event created as a draft. Publish it from All Events when ready.', 'success');
       setTimeout(() => { window.location.href = 'events.html'; }, 600);
     } catch (err) {
-      toast('Something went wrong publishing your event.', 'error');
+      toast('Something went wrong creating your event.', 'error');
       publishBtn.disabled = false;
-      publishBtn.textContent = 'Publish Event';
+      publishBtn.textContent = 'Create Event';
     }
   });
 
