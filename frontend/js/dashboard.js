@@ -34,6 +34,9 @@ function initSidebarDrawer() {
 
 function initUserMeta() {
   const user = getCurrentUser();
+  document.querySelectorAll('[data-user-plan]').forEach((el) => { el.textContent = (user?.plan || 'Free') + ' plan'; });
+  document.querySelectorAll('[data-billing-plan]').forEach((el) => { el.textContent = user?.plan || 'Free'; });
+  document.querySelectorAll('[data-billing-plan-card]').forEach((el) => { el.textContent = user?.plan || 'Free'; });
   const nameEls = document.querySelectorAll('[data-user-name]');
   const initialEls = document.querySelectorAll('[data-user-initial]');
   if (user) {
