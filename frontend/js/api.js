@@ -1,7 +1,6 @@
 // SeatFlow — api.js
-// Every server interaction in the app goes through apiRequest(). Right now
-// DEMO_MODE is on, so requests are served from the local demo state instead
-// of a real network call — this is the seam where a real backend plugs in.
+// Every server interaction in the app goes through apiRequest(). Production
+// requests use the live SeatFlow backend; the demo router remains as a fallback seam.
 
 import {
   AppState, persist, seedDemoDataIfEmpty,
@@ -11,7 +10,7 @@ import {
 } from './state.js';
 import { uid } from './utils.js';
 
-// Flip to false once the backend is deployed and reachable at API_BASE_URL.
+// Production mode: requests use the deployed backend.
 export const DEMO_MODE = false;
 
 // Public config only — no secrets belong here.
@@ -24,11 +23,7 @@ export const API_BASE_URL = (
 
 seedDemoDataIfEmpty();
 
-/**
- * Centralized request function. In production (DEMO_MODE = false) this
- * performs a real fetch against API_BASE_URL. In demo mode it resolves
- * against the local demo state so the whole frontend works standalone.
- */
+/** Centralized request function for live API and optional demo fallback. */
 export async function apiRequest(endpoint, options = {}) {
   if (!DEMO_MODE) {
     const token = localStorage.getItem('seatflow_token');
