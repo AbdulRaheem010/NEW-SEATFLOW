@@ -125,6 +125,14 @@ function initCreateEventWizard() {
   const wizardEl = document.querySelector('[data-wizard]');
   if (!wizardEl) return;
 
+  const templateParam = new URLSearchParams(window.location.search).get('template');
+  const templatePresets = {
+    wedding: { type: 'Wedding', startTime: '17:00', endTime: '22:00' },
+    conference: { type: 'Conference', startTime: '09:00', endTime: '17:00' },
+    gala: { type: 'Gala', startTime: '18:00', endTime: '23:00' },
+    custom: { type: 'Other', startTime: '17:00', endTime: '22:00' },
+  };
+  const selectedTemplate = templatePresets[templateParam] || null;
   const wizardState = { details: {}, guests: [] };
   let currentStep = 0;
 
@@ -133,6 +141,16 @@ function initCreateEventWizard() {
   const backBtn = document.querySelector('[data-wizard-back]');
   const nextBtn = document.querySelector('[data-wizard-next]');
   const publishBtn = document.querySelector('[data-wizard-publish]');
+
+  function applyTemplatePreset() {
+    if (!selectedTemplate) return;
+    const type = document.querySelector('#eventType');
+    const start = document.querySelector('#eventStart');
+    const end = document.querySelector('#eventEnd');
+    if (type) type.value = selectedTemplate.type;
+    if (start) start.value = selectedTemplate.startTime;
+    if (end) end.value = selectedTemplate.endTime;
+  }
 
   function renderProgress() {
     progressEl.innerHTML = WIZARD_STEPS.map((step, i) => {
@@ -283,6 +301,7 @@ function initCreateEventWizard() {
   renderProgress();
   renderPanels();
   renderGuestList();
+  applyTemplatePreset();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
