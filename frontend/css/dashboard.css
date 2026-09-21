@@ -422,3 +422,124 @@
     flex-basis: 40px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   MOBILE DASHBOARD NAVIGATION — explicit, final override
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .app-shell {
+    display: block !important;
+    width: 100%;
+  }
+
+  .app-sidebar {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(280px, 86vw) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    z-index: 1001 !important;
+    transform: translateX(-110%) !important;
+    visibility: hidden !important;
+    transition: transform .25s ease, visibility .25s ease !important;
+    overflow-y: auto !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+  }
+
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    background: rgba(22,30,26,.55) !important;
+  }
+
+  .sidebar-overlay.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .sidebar-toggle-mobile {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    background: var(--surface) !important;
+    cursor: pointer !important;
+  }
+
+  .sidebar-toggle-mobile span {
+    display: block !important;
+    width: 20px !important;
+    height: 2px !important;
+    margin: 0 !important;
+    background: var(--ink) !important;
+    border-radius: 2px !important;
+  }
+
+  .app-main {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-topbar {
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 0 12px !important;
+  }
+
+  .app-topbar > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+
+  .app-topbar h1 {
+    font-size: 1.1rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .topbar-actions {
+    min-width: 0 !important;
+    gap: 6px !important;
+  }
+
+  .topbar-actions .btn {
+    white-space: nowrap !important;
+    padding: 9px 11px !important;
+    font-size: .78rem !important;
+  }
+}
