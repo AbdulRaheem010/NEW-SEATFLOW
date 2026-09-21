@@ -543,3 +543,53 @@
     font-size: .78rem !important;
   }
 }
+
+/* Mobile hamburger: use a self-contained icon so inherited span rules cannot break it. */
+@media (max-width: 1024px) {
+  .sidebar-toggle-mobile {
+    display: inline-flex !important;
+    position: relative !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    background: var(--surface) !important;
+    color: var(--ink) !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    box-sizing: border-box !important;
+  }
+
+  .sidebar-toggle-mobile::before,
+  .sidebar-toggle-mobile::after,
+  .sidebar-toggle-mobile span {
+    content: "" !important;
+    display: block !important;
+    width: 20px !important;
+    height: 2px !important;
+    min-height: 2px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 2px !important;
+    background: var(--ink) !important;
+    border-radius: 999px !important;
+    opacity: 1 !important;
+  }
+
+  .sidebar-toggle-mobile::before { margin-bottom: -1px !important; }
+  .sidebar-toggle-mobile::after { margin-top: -1px !important; }
+}
+
+@media (max-width: 640px) {
+  .sidebar-toggle-mobile {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+  }
+}
