@@ -98,11 +98,18 @@ const updateGuest = asyncHandler(async (req, res) => {
 
   if (Object.prototype.hasOwnProperty.call(req.body, 'tableId') && req.body.tableId) {
     const tableCheck = await pool.query(
-      'SELECT id FROM tables WHERE id = $1 AND event_id = $2',
+      'SELECT id, capacity FROM tables WHERE id = $1 AND event_id = $2',
       [req.body.tableId, req.params.eventId]
     );
     if (tableCheck.rows.length === 0) {
       return res.status(400).json({ error: 'The selected table does not belong to this event.' });
+    }
+    const occupied = await pool.query(
+      'SELECT COUNT(*)::int AS count FROM guests WHERE event_id = $1 AND table_id = $2 AND id <> $3',
+      [req.params.eventId, req.body.tableId, req.params.guestId]
+    );
+    if (occupied.rows[0].count >= tableCheck.rows[0].capacity) {
+      return res.status(409).json({ error: 'That table is already full.' });
     }
   }
 
