@@ -121,7 +121,7 @@ function initForgotPasswordForm() {
 
 /** Redirect signed-out visitors away from dashboard/admin pages. */
 export function requireAuth() {
-  if (!getCurrentUser()) {
+  if (!getCurrentUser() || !localStorage.getItem('seatflow_token')) {
     const depth = window.location.pathname.includes('/dashboard/') || window.location.pathname.includes('/admin/') ? '../' : '';
     window.location.href = `${depth}login.html`;
   }
