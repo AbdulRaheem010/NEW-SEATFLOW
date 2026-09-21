@@ -67,7 +67,7 @@ async function renderOverview() {
     <div class="stat-card"><p class="stat-label">Total Guests</p><p class="stat-value">${totalGuests}</p></div>
     <div class="stat-card"><p class="stat-label">Checked In</p><p class="stat-value">${checkedIn}</p><p class="stat-sub">across all live events</p></div>
     <div class="stat-card"><p class="stat-label">Active QR Codes</p><p class="stat-value">${activeQr}</p></div>
-    <div class="stat-card"><p class="stat-label">Current Plan</p><p class="stat-value" style="font-size:1.3rem;">Standard</p></div>
+    <div class="stat-card"><p class="stat-label">Current Plan</p><p class="stat-value" style="font-size:1.3rem;">${escapeHtml(getCurrentUser()?.plan || "Free")}</p></div>
   `;
 
   const recentList = document.querySelector('[data-recent-events]');
