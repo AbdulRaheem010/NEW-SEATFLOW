@@ -6,15 +6,17 @@ import { apiRequest } from './api.js';
 import { getEvents, AppState, persist } from './state.js';
 import { toast } from './utils.js';
 
-function currentEventId() {
+async function currentEvent() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('event');
-  const events = getEvents();
+  const { events = [] } = await apiRequest('/events');
+
   if (requested) {
     const match = events.find((e) => e.id === requested || e.slug === requested);
-    if (match) return match.id;
+    if (match) return match;
   }
-  return events[0]?.id || null;
+
+  return events[0] || null;
 }
 
 const SHAPE_SIZE = { round: { w: 120, h: 120 }, square: { w: 110, h: 110 }, rectangle: { w: 170, h: 90 } };
@@ -23,8 +25,12 @@ async function initSeatingPage() {
   const canvas = document.querySelector('[data-seating-canvas]');
   if (!canvas) return;
 
-  const eventId = currentEventId();
-  if (!eventId) return;
+  const event = await currentEvent();
+  const eventId = event?.id || null;
+  if (!eventId) {
+    document.querySelector('[data-detail-body]').innerHTML = '<div class="detail-empty">No event is available. Create an event first.</div>';
+    return;
+  }
 
   let tables = [];
   let guests = [];
@@ -66,6 +72,8 @@ async function initSeatingPage() {
 
   /* --------------------------- Guest pool --------------------------- */
   const poolList = document.querySelector('[data-pool-list]');
+  const eventTitle = document.querySelector('.app-topbar h1');
+  if (eventTitle) eventTitle.textContent = `Seating — ${event.name}`;
   const poolSearch = document.querySelector('[data-pool-search]');
   const poolFilters = document.querySelectorAll('[data-pool-filter]');
   let activeFilter = 'all';
