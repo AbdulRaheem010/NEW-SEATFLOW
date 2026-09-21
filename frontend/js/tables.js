@@ -16,7 +16,7 @@ async function currentEvent() {
     if (match) return match;
   }
 
-  return events[0] || null;
+  return null;
 }
 
 async function initTablesPage() {
@@ -25,6 +25,8 @@ async function initTablesPage() {
 
   const event = await currentEvent();
   const eventId = event?.id || null;
+  const contextLinks = { guests: document.querySelector('a[href="guests.html"]'), seating: document.querySelector('a[href="seating.html"]') };
+  if (eventId) Object.values(contextLinks).forEach((link) => { if (link) link.href = `${link.getAttribute('href')}?event=${encodeURIComponent(eventId)}`; });
   if (!eventId) {
     document.querySelector('[data-tables-empty]').style.display = 'block';
     return;
