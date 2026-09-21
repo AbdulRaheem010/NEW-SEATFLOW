@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 if (!process.env.DATABASE_URL) {
-  console.warn('[seatflow-backend] DATABASE_URL is not set. Set it in .env before starting the server.');
+  throw new Error('DATABASE_URL must be configured before starting SeatFlow.');
 }
 
 const pool = new Pool({
