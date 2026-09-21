@@ -34,7 +34,8 @@ const me=asyncHandler(async(req,res)=>{
   const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});
   res.json({user:toPublicUser(user)});
 });
-const forgotPassword=asyncHandler(async(req,res)=>{\n  console.log('[seatflow-backend] Forgot-password request received.');
+const forgotPassword=asyncHandler(async(req,res)=>{
+  console.log('[seatflow-backend] Forgot-password request received.');
   const email=String(req.body.email||'').trim().toLowerCase();
   if(!email)return res.status(400).json({error:'Email is required.'});
   const generic={message:'If an account exists for that email, a password reset link has been sent.'};
