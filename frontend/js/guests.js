@@ -3,7 +3,6 @@
 
 import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
-import { getEvents } from './state.js';
 import { isRequired, isValidEmail, setFieldError, toast, debounce } from './utils.js';
 import { initImportModal } from './import.js';
 
@@ -22,6 +21,10 @@ async function currentEvent() {
 
 function initials(g) {
   return `${g.firstName?.[0] || ''}${g.lastName?.[0] || ''}`.toUpperCase();
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 }
 
 async function initGuestsPage() {
@@ -71,12 +74,12 @@ async function initGuestsPage() {
         <td>
           <div class="guest-name-cell">
             <span class="guest-avatar">${initials(g)}</span>
-            <span>${g.firstName} ${g.lastName}${g.vip ? '<span class="vip-badge">VIP</span>' : ''}</span>
+            <span>${escapeHtml(g.firstName)} ${escapeHtml(g.lastName)}${g.vip ? '<span class="vip-badge">VIP</span>' : ''}</span>
           </div>
         </td>
-        <td>${g.group || '\u2014'}</td>
-        <td>${g.meal || '\u2014'}</td>
-        <td>${g.tableName || (g.tableId ? 'Assigned' : '\u2014')}</td>
+        <td>${escapeHtml(g.group || '\u2014')}</td>
+        <td>${escapeHtml(g.meal || '\u2014')}</td>
+        <td>${escapeHtml(g.tableName || (g.tableId ? 'Assigned' : '\u2014'))}</td>
         <td>${g.seatNumber || '\u2014'}</td>
         <td><span class="status-dot ${g.checkedIn ? 'in' : ''}">${g.checkedIn ? 'Checked in' : 'Not arrived'}</span></td>
         <td>
