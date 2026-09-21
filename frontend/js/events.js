@@ -56,7 +56,7 @@ async function initEventsListPage() {
         <div class="event-row-top">
           <div>
             <h4>${escapeHtml(e.name)}</h4>
-            <p class="event-meta">${formatDate(e.date)} \u00b7 ${e.venue}</p>
+            <p class="event-meta">${formatDate(e.date)} \u00b7 ${escapeHtml(e.venue)}</p>
           </div>
           <span class="status-pill ${e.status === 'live' ? 'live' : 'draft'}">${e.status === 'live' ? 'Live' : 'Draft'}</span>
         </div>
@@ -218,7 +218,7 @@ function initCreateEventWizard() {
     if (idx <= currentStep) goTo(idx); // only allow jumping backward
   });
 
-  /* Step 2 — guest add (lightweight demo; full CRUD ships in Phase 3) */
+  /* Step 2 — guest add; full guest management is available after creation. */
   const guestForm = document.querySelector('[data-guest-add-form]');
   const guestListEl = document.querySelector('[data-wizard-guest-list]');
 
@@ -229,7 +229,7 @@ function initCreateEventWizard() {
     }
     guestListEl.innerHTML = wizardState.guests.map((g) => `
       <div class="guest-mini-row">
-        <span>${g.firstName} ${g.lastName}</span>
+        <span>${escapeHtml(g.firstName)} ${escapeHtml(g.lastName)}</span>
         <button type="button" data-remove-guest="${g.id}">Remove</button>
       </div>
     `).join('');
@@ -257,7 +257,7 @@ function initCreateEventWizard() {
     renderGuestList();
   });
 
-  /* Step 7 — summary + publish */
+  /* Step 7 — create the event as a draft */
   function renderSummary() {
     const summaryEl = document.querySelector('[data-wizard-summary]');
     if (!summaryEl) return;
@@ -281,10 +281,9 @@ function initCreateEventWizard() {
     publishBtn.textContent = 'Publishing\u2026';
 
     try {
-      const slug = wizardState.details.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       const { event } = await apiRequest('/events', {
         method: 'POST',
-        body: JSON.stringify({ ...wizardState.details, slug, guestCount: wizardState.guests.length, status: 'draft' }),
+        body: JSON.stringify(wizardState.details),
       });
       for (const g of wizardState.guests) {
         await apiRequest(`/events/${event.id}/guests`, { method: 'POST', body: JSON.stringify(g) });
