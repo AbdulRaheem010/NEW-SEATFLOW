@@ -96,9 +96,19 @@ const updateGuest = asyncHandler(async (req, res) => {
   }
   if (updates.length === 0) return res.status(400).json({ error: 'No valid fields to update.' });
 
+  if (Object.prototype.hasOwnProperty.call(req.body, 'tableId') && req.body.tableId) {
+    const tableCheck = await pool.query(
+      'SELECT id FROM tables WHERE id = $1 AND event_id = $2',
+      [req.body.tableId, req.params.eventId]
+    );
+    if (tableCheck.rows.length === 0) {
+      return res.status(400).json({ error: 'The selected table does not belong to this event.' });
+    }
+  }
+
   values.push(req.params.guestId, req.params.eventId);
   const result = await pool.query(
-    `UPDATE guests SET ${updates.join(', ')} WHERE id = $${i} AND event_id = $${i + 1} RETURNING *`,
+    `UPDATE guests SET ${updates.join(', ')} WHERE id = ${i} AND event_id = ${i + 1} RETURNING *`,
     values
   );
   if (result.rows.length === 0) return res.status(404).json({ error: 'Guest not found.' });
@@ -140,7 +150,10 @@ const publicGuestLookup = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'Enter a name to search for.' });
   }
 
-  const eventResult = await pool.query('SELECT * FROM events WHERE slug = $1', [slug]);
+  const eventResult = await pool.query(
+    "SELECT * FROM events WHERE slug = $1 AND status = 'live' AND qr_active = true",
+    [slug]
+  );
   const event = eventResult.rows[0];
   if (!event) return res.status(404).json({ error: 'Event not found.' });
 
