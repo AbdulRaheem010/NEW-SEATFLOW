@@ -68,4 +68,12 @@ const me = asyncHandler(async (req, res) => {
   res.json({ user: toPublicUser(user) });
 });
 
-module.exports = { register, login, me };
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+  // Password-reset email delivery is intentionally not faked until an email provider
+  // and reset-token storage are configured.
+  return res.status(501).json({ error: 'Password reset is not configured yet. Please contact support.' });
+});
+
+module.exports = { register, login, me, forgotPassword };
