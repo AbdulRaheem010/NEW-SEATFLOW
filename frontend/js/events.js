@@ -6,6 +6,12 @@ import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
 import { isRequired, uid, toast, debounce, setFieldError, formatDate } from './utils.js';
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
 /* ------------------------------------------------------------------ */
 /* Event list page                                                      */
 /* ------------------------------------------------------------------ */
@@ -61,7 +67,7 @@ async function initEventsListPage() {
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <a href="guests.html?event=${e.id}" class="btn btn-primary btn-sm">Manage Event</a>
-          ${e.status === 'live' ? `<button type="button" class="btn btn-ghost btn-sm" data-show-qr="${e.slug}" data-event-name="${e.name.replace(/"/g, '&quot;')}">View QR</button>` : `<button type="button" class="btn btn-ghost btn-sm" data-publish-event="${e.id}">Publish Event</button>`}
+          ${e.status === 'live' ? `<button type="button" class="btn btn-ghost btn-sm" data-show-qr="${e.slug}" data-event-name="${escapeHtml(e.name)}">View QR</button>` : `<button type="button" class="btn btn-ghost btn-sm" data-publish-event="${e.id}">Publish Event</button>`}
         </div>
       </div>
     `).join('');
