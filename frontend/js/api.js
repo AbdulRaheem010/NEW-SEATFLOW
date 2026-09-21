@@ -153,16 +153,4 @@ function simulateLatency() {
   return new Promise((resolve) => setTimeout(resolve, 260));
 }
 
-/**
- * AI seating optimizer client stub. The frontend never talks to an AI
- * provider directly — this always goes through the backend endpoint below,
- * which is the only place a Claude API key would ever live.
- */
-export async function optimizeSeating(eventId, rules) {
-  return apiRequest(`/events/${eventId}/optimizer`, {
-    method: 'POST',
-    body: JSON.stringify({ rules }),
-  });
-}
-
 export { AppState, persist };
