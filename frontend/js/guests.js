@@ -7,15 +7,17 @@ import { getEvents } from './state.js';
 import { isRequired, isValidEmail, setFieldError, toast, debounce } from './utils.js';
 import { initImportModal } from './import.js';
 
-function currentEventId() {
+async function currentEvent() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('event');
-  const events = getEvents();
+  const { events = [] } = await apiRequest('/events');
+
   if (requested) {
     const match = events.find((e) => e.id === requested || e.slug === requested);
-    if (match) return match.id;
+    if (match) return match;
   }
-  return events[0]?.id || null;
+
+  return events[0] || null;
 }
 
 function initials(g) {
@@ -26,7 +28,8 @@ async function initGuestsPage() {
   const tableBody = document.querySelector('[data-guest-table-body]');
   if (!tableBody) return;
 
-  const eventId = currentEventId();
+  const event = await currentEvent();
+  const eventId = event?.id || null;
   if (!eventId) {
     document.querySelector('[data-guests-shell]').innerHTML = `
       <div class="empty-state">
@@ -37,8 +40,7 @@ async function initGuestsPage() {
     return;
   }
 
-  const event = getEvents().find((e) => e.id === eventId);
-  document.querySelectorAll('[data-event-name]').forEach((el) => { el.textContent = event?.name || 'Event'; });
+  document.querySelectorAll('[data-event-name]').forEach((el) => { el.textContent = event.name || 'Event'; });
 
   let guests = [];
 
