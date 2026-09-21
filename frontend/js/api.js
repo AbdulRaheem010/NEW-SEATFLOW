@@ -12,12 +12,12 @@ import {
 import { uid } from './utils.js';
 
 // Flip to false once the backend is deployed and reachable at API_BASE_URL.
-export const DEMO_MODE = true;
+export const DEMO_MODE = false;
 
 // Public config only — no secrets belong here (see section 61 of the spec).
 // After deploying the backend (e.g. to Render), replace this with its URL,
 // e.g. 'https://seatflow-backend.onrender.com/api/v1'.
-export const API_BASE_URL = 'http://localhost:4000/api/v1';
+export const API_BASE_URL = (window.SEATFLOW_API_BASE_URL || 'http://localhost:4000/api/v1').replace(/\/$/, '');
 
 seedDemoDataIfEmpty();
 
@@ -28,12 +28,31 @@ seedDemoDataIfEmpty();
  */
 export async function apiRequest(endpoint, options = {}) {
   if (!DEMO_MODE) {
+    const token = localStorage.getItem('seatflow_token');
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
       ...options,
+      headers,
     });
-    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-    return res.json();
+
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await res.json() : await res.text();
+
+    if (!res.ok) {
+      const message = data && typeof data === 'object' && data.error
+        ? data.error
+        : `Request failed: ${res.status}`;
+      if (res.status === 401) {
+        localStorage.removeItem('seatflow_token');
+      }
+      throw new Error(message);
+    }
+    return data;
   }
   return demoRouter(endpoint, options);
 }
