@@ -15,7 +15,7 @@ async function currentEvent() {
     if (match) return match;
   }
 
-  return events[0] || null;
+  return null;
 }
 
 const SHAPE_SIZE = { round: { w: 120, h: 120 }, square: { w: 110, h: 110 }, rectangle: { w: 170, h: 90 } };
@@ -26,6 +26,8 @@ async function initSeatingPage() {
 
   const event = await currentEvent();
   const eventId = event?.id || null;
+  const contextLinks = { guests: document.querySelector('a[href="guests.html"]'), tables: document.querySelector('a[href="tables.html"]') };
+  if (eventId) Object.values(contextLinks).forEach((link) => { if (link) link.href = `${link.getAttribute('href')}?event=${encodeURIComponent(eventId)}`; });
   if (!eventId) {
     document.querySelector('[data-detail-body]').innerHTML = '<div class="detail-empty">No event is available. Create an event first.</div>';
     return;
