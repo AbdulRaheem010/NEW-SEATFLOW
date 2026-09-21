@@ -31,12 +31,12 @@ function initPasswordToggles() {
   });
 }
 
-function initLoginForm() {
+async function initLoginForm() {
   const form = document.querySelector('[data-login-form]');
   if (!form) return;
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = form.querySelector('#email');
     const password = form.querySelector('#password');
@@ -50,23 +50,33 @@ function initLoginForm() {
 
     if (!valid) { showStatus(form, 'Please fix the highlighted fields.', 'error'); return; }
 
-    setLoading(submitBtn, true, 'Signing in\u2026', 'Log in');
+    setLoading(submitBtn, true, 'Signing in…', 'Log in');
     showStatus(form, '', '');
 
-    setTimeout(() => {
-      setCurrentUser({ name: email.value.split('@')[0], email: email.value });
-      showStatus(form, 'Signed in \u2014 redirecting\u2026', 'success');
-      setTimeout(() => { window.location.href = 'dashboard/index.html'; }, 500);
-    }, 700);
+    try {
+      const result = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: email.value.trim(), password: password.value }),
+      });
+
+      localStorage.setItem('seatflow_token', result.token);
+      setCurrentUser(result.user);
+      showStatus(form, 'Signed in — redirecting…', 'success');
+      window.location.href = 'dashboard/index.html';
+    } catch (error) {
+      showStatus(form, error.message || 'Unable to sign in. Please try again.', 'error');
+    } finally {
+      setLoading(submitBtn, false, 'Signing in…', 'Log in');
+    }
   });
 }
 
-function initRegisterForm() {
+async function initRegisterForm() {
   const form = document.querySelector('[data-register-form]');
   if (!form) return;
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const firstName = form.querySelector('#firstName');
     const lastName = form.querySelector('#lastName');
@@ -82,19 +92,34 @@ function initRegisterForm() {
     if (password.value.length < 8) { setFieldError(password, 'Use at least 8 characters.'); valid = false; } else setFieldError(password, null);
 
     if (confirmPassword.value !== password.value || !confirmPassword.value) {
-      setFieldError(confirmPassword, 'Passwords don\u2019t match.'); valid = false;
+      setFieldError(confirmPassword, 'Passwords don’t match.'); valid = false;
     } else setFieldError(confirmPassword, null);
 
     if (!valid) { showStatus(form, 'Please fix the highlighted fields.', 'error'); return; }
 
-    setLoading(submitBtn, true, 'Creating account\u2026', 'Create account');
+    setLoading(submitBtn, true, 'Creating account…', 'Create account');
     showStatus(form, '', '');
 
-    setTimeout(() => {
-      setCurrentUser({ name: `${firstName.value} ${lastName.value}`, email: email.value });
-      showStatus(form, 'Account created \u2014 redirecting\u2026', 'success');
-      setTimeout(() => { window.location.href = 'dashboard/index.html'; }, 500);
-    }, 700);
+    try {
+      const result = await apiRequest('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          firstName: firstName.value.trim(),
+          lastName: lastName.value.trim(),
+          email: email.value.trim(),
+          password: password.value,
+        }),
+      });
+
+      localStorage.setItem('seatflow_token', result.token);
+      setCurrentUser(result.user);
+      showStatus(form, 'Account created — redirecting…', 'success');
+      window.location.href = 'dashboard/index.html';
+    } catch (error) {
+      showStatus(form, error.message || 'Unable to create account. Please try again.', 'error');
+    } finally {
+      setLoading(submitBtn, false, 'Creating account…', 'Create account');
+    }
   });
 }
 
