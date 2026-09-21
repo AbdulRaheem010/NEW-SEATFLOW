@@ -3,7 +3,6 @@
 
 import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
-import { getEvents, AppState, persist } from './state.js';
 import { toast } from './utils.js';
 
 async function currentEvent() {
@@ -40,18 +39,84 @@ async function initSeatingPage() {
   const redoStack = [];
 
   function snapshot() {
-    return JSON.stringify({ tables: AppState.tables[eventId] || [], guests: AppState.guests[eventId] || [] });
+    return JSON.stringify({
+      tables: tables.map((t) => ({ ...t })),
+      guests: guests.map((g) => ({ id: g.id, tableId: g.tableId ?? null, seatNumber: g.seatNumber ?? null })),
+    });
   }
+
   function pushHistory() {
     undoStack.push(snapshot());
     if (undoStack.length > 30) undoStack.shift();
     redoStack.length = 0;
   }
-  function restore(snap) {
-    const parsed = JSON.parse(snap);
-    AppState.tables[eventId] = parsed.tables;
-    AppState.guests[eventId] = parsed.guests;
-    persist();
+
+  async function persistSnapshot(snap) {
+    const target = JSON.parse(snap);
+    const targetTables = target.tables || [];
+    const targetGuests = target.guests || [];
+
+    // Reconcile tables first. IDs from the snapshot may no longer exist, so
+    // keep a map from snapshot IDs to the live/recreated table IDs.
+    const currentById = new Map(tables.map((t) => [t.id, t]));
+    const targetIds = new Set(targetTables.map((t) => t.id));
+    const tableIdMap = new Map();
+
+    for (const current of tables) {
+      if (!targetIds.has(current.id)) {
+        await apiRequest(`/events/${eventId}/tables/${current.id}`, { method: 'DELETE' });
+      }
+    }
+
+    for (const targetTable of targetTables) {
+      const current = currentById.get(targetTable.id);
+      if (current) {
+        tableIdMap.set(targetTable.id, current.id);
+        const patch = {};
+        for (const key of ['name', 'capacity', 'shape', 'x', 'y', 'locked']) {
+          if (current[key] !== targetTable[key]) patch[key] = targetTable[key];
+        }
+        if (Object.keys(patch).length) {
+          await apiRequest(`/events/${eventId}/tables/${current.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(patch),
+          });
+        }
+      } else {
+        const created = await apiRequest(`/events/${eventId}/tables`, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: targetTable.name,
+            capacity: targetTable.capacity,
+            shape: targetTable.shape,
+            x: targetTable.x,
+            y: targetTable.y,
+          }),
+        });
+        const createdTable = created.table || created;
+        if (!createdTable?.id) throw new Error('Could not recreate a table while restoring seating.');
+        tableIdMap.set(targetTable.id, createdTable.id);
+        if (targetTable.locked && !createdTable.locked) {
+          await apiRequest(`/events/${eventId}/tables/${createdTable.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ locked: true }),
+          });
+        }
+      }
+    }
+
+    const liveGuests = new Map(guests.map((g) => [g.id, g]));
+    for (const targetGuest of targetGuests) {
+      const liveGuest = liveGuests.get(targetGuest.id);
+      if (!liveGuest) continue;
+      const targetTableId = targetGuest.tableId ? (tableIdMap.get(targetGuest.tableId) || targetGuest.tableId) : null;
+      if (liveGuest.tableId !== targetTableId || (liveGuest.seatNumber ?? null) !== (targetGuest.seatNumber ?? null)) {
+        await apiRequest(`/events/${eventId}/guests/${targetGuest.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ tableId: targetTableId, seatNumber: targetGuest.seatNumber ?? null }),
+        });
+      }
+    }
   }
 
   async function load() {
