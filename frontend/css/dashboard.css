@@ -286,3 +286,139 @@
 .modal-overlay.open .modal-box { transform: translateY(0); opacity: 1; }
 .modal-box h3 { margin-bottom: 18px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+
+/* ==========================================================================
+   FINAL MOBILE APP SHELL OVERRIDES
+   These rules intentionally come last so the mobile drawer wins over the
+   desktop flex shell and is consistent across every dashboard page.
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .app-shell {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(280px, 86vw);
+    height: 100dvh;
+    max-height: 100dvh;
+    z-index: 1000;
+    transform: translate3d(-105%, 0, 0);
+    transition: transform 240ms ease;
+    overflow-y: auto;
+    visibility: hidden;
+  }
+
+  .app-sidebar.open {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(22,30,26,.52);
+  }
+
+  .sidebar-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .sidebar-toggle-mobile {
+    display: inline-flex !important;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sidebar-toggle-mobile span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin: 0;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+
+  .app-main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-topbar {
+    width: 100%;
+    padding: 0 18px;
+    min-height: 64px;
+  }
+
+  body.sidebar-menu-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-topbar {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .app-topbar > div:first-child {
+    min-width: 0;
+  }
+
+  .app-topbar h1 {
+    font-size: 1.12rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-actions .btn {
+    padding-left: 11px;
+    padding-right: 11px;
+    white-space: nowrap;
+  }
+
+  .app-content {
+    padding: 22px 12px 60px;
+  }
+
+  .dash-panel {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .topbar-actions .btn {
+    font-size: .78rem;
+  }
+
+  .sidebar-toggle-mobile {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+}
