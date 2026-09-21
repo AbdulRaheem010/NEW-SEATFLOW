@@ -82,7 +82,7 @@ async function initEventsListPage() {
     if (publishBtn) {
       const eventId = publishBtn.dataset.publishEvent;
       publishBtn.disabled = true;
-      publishBtn.textContent = 'Creating…';
+      publishBtn.textContent = 'Publishing…';
       try {
         const result = await apiRequest(`/events/${eventId}/publish`, { method: 'POST' });
         const index = events.findIndex((item) => item.id === eventId);
@@ -90,7 +90,7 @@ async function initEventsListPage() {
         render();
       } catch (err) {
         publishBtn.disabled = false;
-        publishBtn.textContent = 'Create Event';
+        publishBtn.textContent = 'Publish Event';
         toast(err.message || 'Unable to publish event.', 'error');
       }
       return;
