@@ -34,13 +34,13 @@ const me=asyncHandler(async(req,res)=>{
   const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});
   res.json({user:toPublicUser(user)});
 });
-const forgotPassword=asyncHandler(async(req,res)=>{
+const forgotPassword=asyncHandler(async(req,res)=>{\n  console.log('[seatflow-backend] Forgot-password request received.');
   const email=String(req.body.email||'').trim().toLowerCase();
   if(!email)return res.status(400).json({error:'Email is required.'});
   const generic={message:'If an account exists for that email, a password reset link has been sent.'};
   const result=await pool.query('SELECT id,first_name,email FROM users WHERE email=$1',[email]);
   const user=result.rows[0];
-  if(!user)return res.json(generic);
+  if(!user) { console.log('[seatflow-backend] Forgot-password: no matching account.'); return res.json(generic); }
   const rawToken=crypto.randomBytes(32).toString('hex');
   const tokenHash=crypto.createHash('sha256').update(rawToken).digest('hex');
   const expiresAt=new Date(Date.now()+60*60*1000);
