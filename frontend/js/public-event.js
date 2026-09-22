@@ -3,10 +3,10 @@ import { API_BASE_URL } from './api.js';
 const params = new URLSearchParams(window.location.search);
 const slug = params.get('event');
 const nameEl = document.querySelector('[data-event-name]');
-const submitBtn = form?.querySelector('button[type="submit"]');
 const detailsEl = document.querySelector('[data-event-details]');
 const form = document.querySelector('[data-lookup-form]');
 const resultEl = document.querySelector('[data-result]');
+const submitBtn = form?.querySelector('button[type="submit"]');
 let pendingName = '';
 
 function escapeHtml(value) {
@@ -68,6 +68,7 @@ loadEvent().catch((err) => {
   detailsEl.textContent = err.message;
   form.style.display = 'none';
 });
+
 resultEl.addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-disambiguate]');
   if (!btn) return;
