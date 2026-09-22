@@ -722,3 +722,61 @@
     text-align: right;
   }
 }
+
+/* Final responsive polish for secondary dashboard pages */
+@media (max-width: 640px) {
+  .dash-panel {
+    padding: 18px !important;
+    min-width: 0 !important;
+  }
+
+  .dash-panel-head {
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  .dash-panel-head > div,
+  .dash-panel-head > select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dash-panel-head > select {
+    box-sizing: border-box;
+  }
+
+  .toolbar {
+    width: 100%;
+    margin-bottom: 18px !important;
+  }
+
+  .toolbar .search-input,
+  .toolbar .select-input {
+    min-width: 0 !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    box-sizing: border-box;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-grid {
+    width: 100%;
+  }
+
+  .stat-card {
+    min-width: 0 !important;
+  }
+
+  .activity-row strong,
+  .activity-row time {
+    overflow-wrap: anywhere;
+  }
+
+  .app-content {
+    overflow-x: hidden;
+  }
+}
