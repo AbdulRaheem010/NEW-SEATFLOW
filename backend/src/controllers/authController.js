@@ -37,7 +37,8 @@ const updateProfile=asyncHandler(async(req,res)=>{
   const result=await pool.query('UPDATE users SET first_name=$1,last_name=$2 WHERE id=$3 RETURNING *',[firstName,lastName,req.user.id]);
   const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});
   res.json({user:toPublicUser(user)});
-});\nconst me=asyncHandler(async(req,res)=>{
+});
+const me=asyncHandler(async(req,res)=>{
   const result=await pool.query('SELECT * FROM users WHERE id=$1',[req.user.id]);
   const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});
   res.json({user:toPublicUser(user)});
