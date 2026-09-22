@@ -6,5 +6,6 @@ router.post('/register',register);
 router.post('/login',login);
 router.post('/forgot-password',forgotPassword);
 router.post('/reset-password',resetPassword);
-router.get('/me',requireAuth,me);\nrouter.patch('/me',requireAuth,updateProfile);
+router.get('/me',requireAuth,me);
+router.patch('/me',requireAuth,updateProfile);
 module.exports=router;
