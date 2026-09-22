@@ -686,3 +686,39 @@
     flex: 1 1 120px;
   }
 }
+
+@media (max-width: 640px) {
+  .event-card-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .guest-add-row {
+    flex-direction: column !important;
+  }
+
+  .guest-add-row .btn,
+  .guest-add-row input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .guest-mini-row {
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  .guest-mini-row > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .summary-row {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .summary-row > span:last-child {
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+}
