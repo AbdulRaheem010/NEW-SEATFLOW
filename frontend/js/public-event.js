@@ -3,6 +3,7 @@ import { API_BASE_URL } from './api.js';
 const params = new URLSearchParams(window.location.search);
 const slug = params.get('event');
 const nameEl = document.querySelector('[data-event-name]');
+const submitBtn = form?.querySelector('button[type="submit"]');
 const detailsEl = document.querySelector('[data-event-details]');
 const form = document.querySelector('[data-lookup-form]');
 const resultEl = document.querySelector('[data-result]');
@@ -31,6 +32,7 @@ async function lookupGuest(name, disambiguator = '') {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = form.name.value.trim();
+  submitBtn?.setAttribute('disabled', 'disabled');
   resultEl.innerHTML = '<p>Searching…</p>';
   try {
     const { res, data } = await lookupGuest(name);
@@ -56,6 +58,8 @@ form.addEventListener('submit', async (e) => {
       </div>`;
   } catch (err) {
     resultEl.innerHTML = `<p style="color:#b42318;">${escapeHtml(err.message)}</p>`;
+  } finally {
+    submitBtn?.removeAttribute('disabled');
   }
 });
 
