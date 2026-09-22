@@ -29,7 +29,7 @@ const login=asyncHandler(async(req,res)=>{
   if(!(await bcrypt.compare(password,user.password_hash)))return res.status(401).json({error:'Invalid email or password.'});
   res.json({user:toPublicUser(user),token:signToken(user)});
 });
-const me=asyncHandler(async(req,res)=>{
+const updateProfile=asyncHandler(async(req,res)=>{\n  const firstName=String(req.body.firstName||'').trim();\n  const lastName=String(req.body.lastName||'').trim();\n  if(!firstName||!lastName)return res.status(400).json({error:'First name and last name are required.'});\n  if(firstName.length>80||lastName.length>80)return res.status(400).json({error:'Names must be 80 characters or fewer.'});\n  const result=await pool.query('UPDATE users SET first_name=$1,last_name=$2 WHERE id=$3 RETURNING *',[firstName,lastName,req.user.id]);\n  const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});\n  res.json({user:toPublicUser(user)});\n});\nconst me=asyncHandler(async(req,res)=>{
   const result=await pool.query('SELECT * FROM users WHERE id=$1',[req.user.id]);
   const user=result.rows[0]; if(!user)return res.status(404).json({error:'User not found.'});
   res.json({user:toPublicUser(user)});
@@ -81,4 +81,4 @@ const resetPassword=asyncHandler(async(req,res)=>{
   }
   res.json({message:'Your password has been reset. You can now log in.'});
 });
-module.exports={register,login,me,forgotPassword,resetPassword};
+module.exports={register,login,me,updateProfile,forgotPassword,resetPassword};
