@@ -65,7 +65,7 @@ async function initEventsListPage() {
           <div><strong>${e.guestCount ? Math.round((e.assignedCount / e.guestCount) * 100) : 0}%</strong>Assigned</div>
           <div><strong>${e.qrActive ? 'Active' : 'Inactive'}</strong>QR Status</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="event-card-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <a href="guests.html?event=${e.id}" class="btn btn-primary btn-sm">Manage Event</a>
           ${e.status === 'live' ? `<button type="button" class="btn btn-ghost btn-sm" data-show-qr="${e.slug}" data-event-name="${escapeHtml(e.name)}">View QR</button>` : `<button type="button" class="btn btn-ghost btn-sm" data-publish-event="${e.id}">Publish Event</button>`}
         </div>
