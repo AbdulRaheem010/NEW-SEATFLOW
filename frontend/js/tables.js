@@ -4,7 +4,9 @@
 
 import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
-import { isRequired, setFieldError, toast, uid } from './utils.js';
+import { isRequired, setFieldError, toast } from './utils.js';
+
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 async function currentEvent() {
   const params = new URLSearchParams(window.location.search);
@@ -62,23 +64,23 @@ async function initTablesPage() {
       const filled = occupancy(t.id);
       const pct = t.capacity ? Math.min(100, Math.round((filled / t.capacity) * 100)) : 0;
       return `
-        <div class="table-manage-card" data-table-card="${t.id}">
+        <div class="table-manage-card" data-table-card="${escapeHtml(t.id)}">
           <div class="tm-head">
             <div style="display:flex; gap:10px; align-items:center;">
               <span class="tm-shape-icon ${t.shape}"></span>
               <div>
-                <h4>${t.name}</h4>
-                <p class="tm-meta">${t.shape.charAt(0).toUpperCase() + t.shape.slice(1)}${t.locked ? ' \u00b7 Locked' : ''}</p>
+                <h4>${escapeHtml(t.name)}</h4>
+                <p class="tm-meta">${escapeHtml(t.shape.charAt(0).toUpperCase() + t.shape.slice(1))}${t.locked ? ' \u00b7 Locked' : ''}</p>
               </div>
             </div>
           </div>
           <p class="tm-meta">${filled} / ${t.capacity} seated</p>
           <div class="tm-fill-bar"><span style="width:${pct}%; ${pct >= 100 ? 'background:var(--danger)' : ''}"></span></div>
           <div class="tm-actions">
-            <button type="button" class="btn btn-ghost btn-sm" data-edit-table="${t.id}">Edit</button>
-            <button type="button" class="btn btn-ghost btn-sm" data-duplicate-table="${t.id}">Duplicate</button>
-            <button type="button" class="btn btn-ghost btn-sm" data-lock-table="${t.id}">${t.locked ? 'Unlock' : 'Lock'}</button>
-            <button type="button" class="btn btn-ghost btn-sm" data-delete-table="${t.id}" style="color:var(--danger);">Delete</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-edit-table="${escapeHtml(t.id)}">Edit</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-duplicate-table="${escapeHtml(t.id)}">Duplicate</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-lock-table="${escapeHtml(t.id)}">${t.locked ? 'Unlock' : 'Lock'}</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-delete-table="${escapeHtml(t.id)}" style="color:var(--danger);">Delete</button>
           </div>
         </div>`;
     }).join('');
