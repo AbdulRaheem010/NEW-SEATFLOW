@@ -5,6 +5,7 @@ const slug = params.get('event');
 const nameEl = document.querySelector('[data-event-name]');
 const detailsEl = document.querySelector('[data-event-details]');
 const form = document.querySelector('[data-lookup-form]');
+const submitBtn = form?.querySelector('button[type="submit"]');
 const resultEl = document.querySelector('[data-result]');
 const submitBtn = form?.querySelector('button[type="submit"]');
 let pendingName = '';
