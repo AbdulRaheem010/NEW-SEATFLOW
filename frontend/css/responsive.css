@@ -203,3 +203,54 @@
   .table-responsive,
   .data-table-wrap { margin-right: -12px; width: calc(100% + 24px); }
 }
+
+/* Final public-site mobile overflow guard */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 834px) {
+  .site-header .container {
+    min-width: 0;
+  }
+
+  .nav-actions {
+    min-width: 0;
+  }
+
+  .nav-toggle {
+    flex-shrink: 0;
+  }
+
+  .hero-copy,
+  .hero-visual,
+  .section,
+  .page-header,
+  .pricing-grid,
+  .compare-table,
+  .footer-grid {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 414px) {
+  .section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .hero h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .hero-copy p,
+  .section p {
+    overflow-wrap: anywhere;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
