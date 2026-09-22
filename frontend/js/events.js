@@ -1,310 +1,50 @@
 // SeatFlow — events.js
-// Powers dashboard/events.html (search/filter/sort) and
-// dashboard/create-event.html (the multi-step wizard).
-
 import { requireAuth } from './auth.js';
 import { apiRequest } from './api.js';
 import { isRequired, uid, toast, debounce, setFieldError, formatDate } from './utils.js';
 
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
-}
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* ------------------------------------------------------------------ */
-/* Event list page                                                      */
-/* ------------------------------------------------------------------ */
 async function initEventsListPage() {
-  const listEl = document.querySelector('[data-event-list]');
-  if (!listEl) return;
-
-  const { events } = await apiRequest('/events');
-  const searchInput = document.querySelector('[data-event-search]');
-  const statusFilter = document.querySelector('[data-status-filter]');
-  const sortSelect = document.querySelector('[data-sort-select]');
-
-  function render() {
-    let items = [...events];
-
-    const q = (searchInput?.value || '').trim().toLowerCase();
-    if (q) items = items.filter((e) => e.name.toLowerCase().includes(q) || e.venue.toLowerCase().includes(q));
-
-    const status = statusFilter?.value;
-    if (status && status !== 'all') items = items.filter((e) => e.status === status);
-
-    const sort = sortSelect?.value || 'date-asc';
-    items.sort((a, b) => {
-      if (sort === 'date-asc') return new Date(a.date) - new Date(b.date);
-      if (sort === 'date-desc') return new Date(b.date) - new Date(a.date);
-      if (sort === 'name-asc') return a.name.localeCompare(b.name);
-      if (sort === 'guests-desc') return b.guestCount - a.guestCount;
-      return 0;
+  const listEl = document.querySelector('[data-event-list]'); if (!listEl) return;
+  try {
+    const { events } = await apiRequest('/events');
+    const searchInput = document.querySelector('[data-event-search]'), statusFilter = document.querySelector('[data-status-filter]'), sortSelect = document.querySelector('[data-sort-select]');
+    function render() {
+      let items = [...events], q = (searchInput?.value || '').trim().toLowerCase();
+      if (q) items = items.filter(e => (e.name || '').toLowerCase().includes(q) || (e.venue || '').toLowerCase().includes(q));
+      const status = statusFilter?.value; if (status && status !== 'all') items = items.filter(e => e.status === status);
+      const sort = sortSelect?.value || 'date-asc';
+      items.sort((a,b) => sort === 'date-asc' ? new Date(a.date)-new Date(b.date) : sort === 'date-desc' ? new Date(b.date)-new Date(a.date) : sort === 'name-asc' ? (a.name||'').localeCompare(b.name||'') : Number(b.guestCount||0)-Number(a.guestCount||0));
+      if (!items.length) { listEl.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><h3>No events match your search.</h3><p>Try a different name, venue, or clear your filters.</p></div>'; return; }
+      listEl.innerHTML = items.map(e => '<div class="event-row-card"><div class="event-row-top"><div><h4>'+escapeHtml(e.name)+'</h4><p class="event-meta">'+formatDate(e.date)+' · '+escapeHtml(e.venue)+'</p></div><span class="status-pill '+(e.status==='live'?'live':'draft')+'">'+(e.status==='live'?'Live':'Draft')+'</span></div><div class="event-stats-row"><div><strong>'+Number(e.guestCount||0)+'</strong>Guests</div><div><strong>'+(e.guestCount?Math.round((e.assignedCount/e.guestCount)*100):0)+'%</strong>Assigned</div><div><strong>'+(e.qrActive?'Active':'Inactive')+'</strong>QR Status</div></div><div class="event-card-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><a href="guests.html?event='+encodeURIComponent(e.id)+'" class="btn btn-primary btn-sm">Manage Event</a>'+(e.status==='live'?'<button type="button" class="btn btn-ghost btn-sm" data-show-qr="'+escapeHtml(e.slug)+'" data-event-name="'+escapeHtml(e.name)+'">View QR</button>':'<button type="button" class="btn btn-ghost btn-sm" data-publish-event="'+escapeHtml(e.id)+'">Publish Event</button>')+'</div></div>').join('');
+    }
+    render();
+    listEl.addEventListener('click', async (event) => {
+      const publishBtn=event.target.closest('[data-publish-event]'), qrBtn=event.target.closest('[data-show-qr]');
+      if (publishBtn) { publishBtn.disabled=true; publishBtn.textContent='Publishing…'; try { const result=await apiRequest('/events/'+publishBtn.dataset.publishEvent+'/publish',{method:'POST'}); const i=events.findIndex(x=>x.id===publishBtn.dataset.publishEvent); if(i!==-1) events[i]={...events[i],...result.event,status:'live',qrActive:true}; render(); } catch(err) { publishBtn.disabled=false; publishBtn.textContent='Publish Event'; toast(err.message||'Unable to publish event.','error'); } return; }
+      if (qrBtn) { const name=qrBtn.dataset.eventName||'Event', url=window.location.origin+'/public-event.html?event='+encodeURIComponent(qrBtn.dataset.showQr), qr='https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=20&data='+encodeURIComponent(url), modal=document.createElement('div'); modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999;'; modal.innerHTML='<div style="background:var(--surface,#fff);color:var(--text,#111);max-width:520px;width:100%;padding:28px;border-radius:18px;text-align:center;"><h2>'+escapeHtml(name)+'</h2><p>Scan this QR code to open the guest event page.</p><img src="'+escapeHtml(qr)+'" alt="QR code for '+escapeHtml(name)+'" style="width:min(360px,100%);height:auto;border-radius:10px;background:#fff;padding:10px;"><p style="font-size:13px;word-break:break-all;">'+escapeHtml(url)+'</p><a class="btn btn-primary btn-sm" href="'+escapeHtml(qr)+'" target="_blank" rel="noopener">Open QR</a> <button type="button" class="btn btn-ghost btn-sm" data-close-qr>Close</button></div>'; modal.addEventListener('click',e=>{if(e.target===modal||e.target.closest('[data-close-qr]'))modal.remove();}); document.body.appendChild(modal); }
     });
-
-    if (items.length === 0) {
-      listEl.innerHTML = `
-        <div class="empty-state" style="grid-column:1/-1;">
-          <h3>No events match your search.</h3>
-          <p>Try a different name, venue, or clear your filters.</p>
-        </div>`;
-      return;
-    }
-
-    listEl.innerHTML = items.map((e) => `
-      <div class="event-row-card">
-        <div class="event-row-top">
-          <div>
-            <h4>${escapeHtml(e.name)}</h4>
-            <p class="event-meta">${formatDate(e.date)} \u00b7 ${escapeHtml(e.venue)}</p>
-          </div>
-          <span class="status-pill ${e.status === 'live' ? 'live' : 'draft'}">${e.status === 'live' ? 'Live' : 'Draft'}</span>
-        </div>
-        <div class="event-stats-row">
-          <div><strong>${e.guestCount}</strong>Guests</div>
-          <div><strong>${e.guestCount ? Math.round((e.assignedCount / e.guestCount) * 100) : 0}%</strong>Assigned</div>
-          <div><strong>${e.qrActive ? 'Active' : 'Inactive'}</strong>QR Status</div>
-        </div>
-        <div class="event-card-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <a href="guests.html?event=${e.id}" class="btn btn-primary btn-sm">Manage Event</a>
-          ${e.status === 'live' ? `<button type="button" class="btn btn-ghost btn-sm" data-show-qr="${e.slug}" data-event-name="${escapeHtml(e.name)}">View QR</button>` : `<button type="button" class="btn btn-ghost btn-sm" data-publish-event="${e.id}">Publish Event</button>`}
-        </div>
-      </div>
-    `).join('');
-  }
-
-  render();
-
-  listEl.addEventListener('click', async (e) => {
-    const publishBtn = e.target.closest('[data-publish-event]');
-    const qrBtn = e.target.closest('[data-show-qr]');
-
-    if (publishBtn) {
-      const eventId = publishBtn.dataset.publishEvent;
-      publishBtn.disabled = true;
-      publishBtn.textContent = 'Publishing…';
-      try {
-        const result = await apiRequest(`/events/${eventId}/publish`, { method: 'POST' });
-        const index = events.findIndex((item) => item.id === eventId);
-        if (index !== -1) events[index] = { ...events[index], ...result.event, status: 'live', qrActive: true };
-        render();
-      } catch (err) {
-        publishBtn.disabled = false;
-        publishBtn.textContent = 'Publish Event';
-        toast(err.message || 'Unable to publish event.', 'error');
-      }
-      return;
-    }
-
-    if (qrBtn) {
-      const slug = qrBtn.dataset.showQr;
-      const eventName = qrBtn.dataset.eventName || 'Event';
-      const publicUrl = `${window.location.origin}/public-event.html?event=${encodeURIComponent(slug)}`;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=20&data=${encodeURIComponent(publicUrl)}`;
-      const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999;';
-      modal.innerHTML = `<div style="background:var(--surface,#fff);color:var(--text,#111);max-width:520px;width:100%;padding:28px;border-radius:18px;text-align:center;"><h2 style="margin:0 0 8px;">${eventName}</h2><p style="margin:0 0 18px;">Scan this QR code to open the guest event page.</p><img src="${qrUrl}" alt="QR code for ${eventName}" style="width:min(360px,100%);height:auto;border-radius:10px;background:#fff;padding:10px;"><p style="font-size:13px;word-break:break-all;margin:16px 0;">${publicUrl}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><a class="btn btn-primary btn-sm" href="${qrUrl}" target="_blank" rel="noopener">Open QR</a><button type="button" class="btn btn-ghost btn-sm" data-close-qr>Close</button></div></div>`;
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal || event.target.closest('[data-close-qr]')) modal.remove();
-      });
-      document.body.appendChild(modal);
-    }
-  });
-
-  searchInput?.addEventListener('input', debounce(render, 150));
-  statusFilter?.addEventListener('change', render);
-  sortSelect?.addEventListener('change', render);
+    searchInput?.addEventListener('input',debounce(render,150)); statusFilter?.addEventListener('change',render); sortSelect?.addEventListener('change',render);
+  } catch(error) { listEl.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><h3>Unable to load events.</h3><p>Please refresh and try again.</p></div>'; toast(error.message||'Unable to load events.','error'); }
 }
 
-/* ------------------------------------------------------------------ */
-/* Create-event wizard                                                  */
-/* ------------------------------------------------------------------ */
-const WIZARD_STEPS = ['details', 'guests', 'tables', 'seating', 'branding', 'guest-experience', 'review'];
-
+const WIZARD_STEPS=['details','guests','tables','seating','branding','guest-experience','review'];
 function initCreateEventWizard() {
-  const wizardEl = document.querySelector('[data-wizard]');
-  if (!wizardEl) return;
-
-  const templateParam = new URLSearchParams(window.location.search).get('template');
-  const templatePresets = {
-    wedding: { type: 'Wedding', startTime: '17:00', endTime: '22:00' },
-    conference: { type: 'Conference', startTime: '09:00', endTime: '17:00' },
-    gala: { type: 'Gala', startTime: '18:00', endTime: '23:00' },
-    custom: { type: 'Other', startTime: '17:00', endTime: '22:00' },
-  };
-  const selectedTemplate = templatePresets[templateParam] || null;
-  const wizardState = { details: {}, guests: [] };
-  let currentStep = 0;
-
-  const progressEl = document.querySelector('[data-wizard-progress]');
-  const panels = document.querySelectorAll('[data-wizard-panel]');
-  const backBtn = document.querySelector('[data-wizard-back]');
-  const nextBtn = document.querySelector('[data-wizard-next]');
-  const publishBtn = document.querySelector('[data-wizard-publish]');
-
-  function applyTemplatePreset() {
-    if (!selectedTemplate) return;
-    const type = document.querySelector('#eventType');
-    const start = document.querySelector('#eventStart');
-    const end = document.querySelector('#eventEnd');
-    if (type) type.value = selectedTemplate.type;
-    if (start) start.value = selectedTemplate.startTime;
-    if (end) end.value = selectedTemplate.endTime;
-  }
-
-  function renderProgress() {
-    progressEl.innerHTML = WIZARD_STEPS.map((step, i) => {
-      const label = { details: 'Event Details', guests: 'Guests', tables: 'Tables', seating: 'Seating', branding: 'Branding', 'guest-experience': 'Guest Experience', review: 'Review & Create' }[step];
-      const state = i === currentStep ? 'active' : i < currentStep ? 'done' : '';
-      return `<div class="wizard-step ${state}"><span class="step-circle">${i < currentStep ? '\u2713' : i + 1}</span><span class="label">${label}</span></div>`;
-    }).join('');
-  }
-
-  function renderPanels() {
-    panels.forEach((panel, i) => {
-      panel.style.display = i === currentStep ? 'block' : 'none';
-    });
-    backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-    nextBtn.style.display = currentStep === WIZARD_STEPS.length - 1 ? 'none' : 'inline-flex';
-    publishBtn.style.display = currentStep === WIZARD_STEPS.length - 1 ? 'inline-flex' : 'none';
-    if (currentStep === WIZARD_STEPS.length - 1) renderSummary();
-  }
-
-  function goTo(step) {
-    currentStep = step;
-    renderProgress();
-    renderPanels();
-    wizardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function validateDetailsStep() {
-    const name = document.querySelector('#eventName');
-    const type = document.querySelector('#eventType');
-    const date = document.querySelector('#eventDate');
-    const venue = document.querySelector('#eventVenue');
-    let valid = true;
-
-    if (!isRequired(name.value)) { setFieldError(name, 'Event name is required.'); valid = false; } else setFieldError(name, null);
-    if (!isRequired(type.value)) { setFieldError(type, 'Choose an event type.'); valid = false; } else setFieldError(type, null);
-    if (!isRequired(date.value)) { setFieldError(date, 'Event date is required.'); valid = false; } else setFieldError(date, null);
-    if (!isRequired(venue.value)) { setFieldError(venue, 'Venue is required.'); valid = false; } else setFieldError(venue, null);
-
-    if (valid) {
-      wizardState.details = {
-        name: name.value,
-        type: type.value,
-        date: date.value,
-        startTime: document.querySelector('#eventStart').value,
-        endTime: document.querySelector('#eventEnd').value,
-        venue: venue.value,
-        description: document.querySelector('#eventDescription').value,
-        timezone: document.querySelector('#eventTimezone').value,
-      };
-    }
-    return valid;
-  }
-
-  nextBtn.addEventListener('click', () => {
-    if (currentStep === 0 && !validateDetailsStep()) { toast('Please fill in the required event details.', 'error'); return; }
-    goTo(Math.min(currentStep + 1, WIZARD_STEPS.length - 1));
-  });
-
-  backBtn.addEventListener('click', () => goTo(Math.max(currentStep - 1, 0)));
-
-  progressEl.addEventListener('click', (e) => {
-    const stepEl = e.target.closest('.wizard-step');
-    if (!stepEl) return;
-    const idx = [...progressEl.children].indexOf(stepEl);
-    if (idx <= currentStep) goTo(idx); // only allow jumping backward
-  });
-
-  /* Step 2 — guest add; full guest management is available after creation. */
-  const guestForm = document.querySelector('[data-guest-add-form]');
-  const guestListEl = document.querySelector('[data-wizard-guest-list]');
-
-  function renderGuestList() {
-    if (wizardState.guests.length === 0) {
-      guestListEl.innerHTML = `<div class="guest-mini-empty">No guests added yet.</div>`;
-      return;
-    }
-    guestListEl.innerHTML = wizardState.guests.map((g) => `
-      <div class="guest-mini-row">
-        <span>${escapeHtml(g.firstName)} ${escapeHtml(g.lastName)}</span>
-        <button type="button" data-remove-guest="${g.id}">Remove</button>
-      </div>
-    `).join('');
-  }
-
-  guestForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const firstInput = guestForm.querySelector('#wizardGuestFirst');
-    const lastInput = guestForm.querySelector('#wizardGuestLast');
-    if (!isRequired(firstInput.value) || !isRequired(lastInput.value)) {
-      toast('Enter a first and last name.', 'error');
-      return;
-    }
-    wizardState.guests.push({ id: uid('guest'), firstName: firstInput.value.trim(), lastName: lastInput.value.trim() });
-    firstInput.value = '';
-    lastInput.value = '';
-    firstInput.focus();
-    renderGuestList();
-  });
-
-  guestListEl?.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-remove-guest]');
-    if (!btn) return;
-    wizardState.guests = wizardState.guests.filter((g) => g.id !== btn.dataset.removeGuest);
-    renderGuestList();
-  });
-
-  /* Step 7 — create the event as a draft */
-  function renderSummary() {
-    const summaryEl = document.querySelector('[data-wizard-summary]');
-    if (!summaryEl) return;
-    const d = wizardState.details;
-    summaryEl.innerHTML = `
-      <div class="summary-row"><span>Event name</span><span>${d.name || '\u2014'}</span></div>
-      <div class="summary-row"><span>Type</span><span>${d.type || '\u2014'}</span></div>
-      <div class="summary-row"><span>Date</span><span>${d.date ? formatDate(d.date) : '\u2014'}</span></div>
-      <div class="summary-row"><span>Venue</span><span>${d.venue || '\u2014'}</span></div>
-      <div class="summary-row"><span>Guests added</span><span>${wizardState.guests.length}</span></div>
-    `;
-  }
-
-  publishBtn?.addEventListener('click', async () => {
-    if (!isRequired(wizardState.details.name)) {
-      toast('Complete the event details step before creating the event.', 'error');
-      goTo(0);
-      return;
-    }
-    publishBtn.disabled = true;
-    publishBtn.textContent = 'Publishing\u2026';
-
-    try {
-      const { event } = await apiRequest('/events', {
-        method: 'POST',
-        body: JSON.stringify(wizardState.details),
-      });
-      for (const g of wizardState.guests) {
-        await apiRequest(`/events/${event.id}/guests`, { method: 'POST', body: JSON.stringify(g) });
-      }
-      toast('Event created as a draft. Publish it from All Events when ready.', 'success');
-      setTimeout(() => { window.location.href = 'events.html'; }, 600);
-    } catch (err) {
-      toast('Something went wrong creating your event.', 'error');
-      publishBtn.disabled = false;
-      publishBtn.textContent = 'Create Event';
-    }
-  });
-
-  renderProgress();
-  renderPanels();
-  renderGuestList();
-  applyTemplatePreset();
+  const wizardEl=document.querySelector('[data-wizard]'); if(!wizardEl)return;
+  const preset={wedding:{type:'Wedding',startTime:'17:00',endTime:'22:00'},conference:{type:'Conference',startTime:'09:00',endTime:'17:00'},gala:{type:'Gala',startTime:'18:00',endTime:'23:00'},custom:{type:'Other',startTime:'17:00',endTime:'22:00'}}[new URLSearchParams(location.search).get('template')];
+  const state={details:{},guests:[]}; let step=0; const progress=document.querySelector('[data-wizard-progress]'), panels=document.querySelectorAll('[data-wizard-panel]'), back=document.querySelector('[data-wizard-back]'), next=document.querySelector('[data-wizard-next]'), create=document.querySelector('[data-wizard-publish]');
+  function renderProgress(){progress.innerHTML=WIZARD_STEPS.map((s,i)=>'<div class="wizard-step '+(i===step?'active':i<step?'done':'')+'"><span class="step-circle">'+(i<step?'✓':i+1)+'</span><span class="label">'+({details:'Event Details',guests:'Guests',tables:'Tables',seating:'Seating',branding:'Branding','guest-experience':'Guest Experience',review:'Review & Create'}[s])+'</span></div>').join('');}
+  function summary(){const d=state.details,el=document.querySelector('[data-wizard-summary]'); if(!el)return; el.innerHTML='<div class="summary-row"><span>Event name</span><span>'+escapeHtml(d.name||'—')+'</span></div><div class="summary-row"><span>Type</span><span>'+escapeHtml(d.type||'—')+'</span></div><div class="summary-row"><span>Date</span><span>'+escapeHtml(d.date?formatDate(d.date):'—')+'</span></div><div class="summary-row"><span>Venue</span><span>'+escapeHtml(d.venue||'—')+'</span></div><div class="summary-row"><span>Guests added</span><span>'+state.guests.length+'</span></div>';}
+  function panels(){panels.forEach((p,i)=>p.style.display=i===step?'block':'none');back.style.visibility=step===0?'hidden':'visible';next.style.display=step===WIZARD_STEPS.length-1?'none':'inline-flex';create.style.display=step===WIZARD_STEPS.length-1?'inline-flex':'none';if(step===WIZARD_STEPS.length-1)summary();}
+  function go(n){step=n;renderProgress();panels();wizardEl.scrollIntoView({behavior:'smooth',block:'start'});}
+  function validate(){const name=document.querySelector('#eventName'),type=document.querySelector('#eventType'),date=document.querySelector('#eventDate'),venue=document.querySelector('#eventVenue'),start=document.querySelector('#eventStart'),end=document.querySelector('#eventEnd');let ok=true;if(!isRequired(name.value)){setFieldError(name,'Event name is required.');ok=false}else setFieldError(name,null);if(!isRequired(type.value)){setFieldError(type,'Choose an event type.');ok=false}else setFieldError(type,null);if(!isRequired(date.value)){setFieldError(date,'Event date is required.');ok=false}else setFieldError(date,null);if(!isRequired(venue.value)){setFieldError(venue,'Venue is required.');ok=false}else setFieldError(venue,null);if(start.value&&end.value&&start.value>=end.value){toast('End time must be later than start time.','error');ok=false}if(ok)state.details={name:name.value.trim(),type:type.value,date:date.value,startTime:start.value,endTime:end.value,venue:venue.value.trim(),description:document.querySelector('#eventDescription').value.trim(),timezone:document.querySelector('#eventTimezone').value};return ok;}
+  next.addEventListener('click',()=>{if(step===0&&!validate()){toast('Please complete the required event details.','error');return}go(Math.min(step+1,WIZARD_STEPS.length-1));}); back.addEventListener('click',()=>go(Math.max(step-1,0))); progress.addEventListener('click',e=>{const x=e.target.closest('.wizard-step');if(x){const i=[...progress.children].indexOf(x);if(i<=step)go(i);}});
+  const form=document.querySelector('[data-guest-add-form]'), list=document.querySelector('[data-wizard-guest-list]');
+  function guests(){list.innerHTML=state.guests.length?state.guests.map(g=>'<div class="guest-mini-row"><span>'+escapeHtml(g.firstName)+' '+escapeHtml(g.lastName)+'</span><button type="button" data-remove-guest="'+escapeHtml(g.id)+'">Remove</button></div>').join(''):'<div class="guest-mini-empty">No guests added yet.</div>';}
+  form?.addEventListener('submit',e=>{e.preventDefault();const f=form.querySelector('#wizardGuestFirst'),l=form.querySelector('#wizardGuestLast');if(!isRequired(f.value)||!isRequired(l.value)){toast('Enter a first and last name.','error');return}state.guests.push({id:uid('guest'),firstName:f.value.trim(),lastName:l.value.trim()});f.value='';l.value='';f.focus();guests();});
+  list?.addEventListener('click',e=>{const b=e.target.closest('[data-remove-guest]');if(b){state.guests=state.guests.filter(g=>g.id!==b.dataset.removeGuest);guests();}});
+  create?.addEventListener('click',async()=>{if(!isRequired(state.details.name)){toast('Complete the event details step before creating the event.','error');go(0);return}create.disabled=true;create.textContent='Creating…';try{const {event}=await apiRequest('/events',{method:'POST',body:JSON.stringify(state.details)});for(const g of state.guests)await apiRequest('/events/'+event.id+'/guests',{method:'POST',body:JSON.stringify(g)});toast('Event created as a draft. Publish it from All Events when ready.','success');setTimeout(()=>location.href='events.html',600);}catch(err){toast(err.message||'Something went wrong creating your event.','error');create.disabled=false;create.textContent='Create Event';}});
+  if(preset){document.querySelector('#eventType').value=preset.type;document.querySelector('#eventStart').value=preset.startTime;document.querySelector('#eventEnd').value=preset.endTime;} renderProgress();panels();guests();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  requireAuth();
-  initEventsListPage();
-  initCreateEventWizard();
-});
+document.addEventListener('DOMContentLoaded',()=>{requireAuth();initEventsListPage();initCreateEventWizard();});
