@@ -23,8 +23,18 @@ function initSidebarDrawer() {
   const overlay = document.querySelector('[data-sidebar-overlay]');
   if (!toggle || !sidebar) return;
 
-  const open = () => { sidebar.classList.add('open'); overlay?.classList.add('open'); };
-  const close = () => { sidebar.classList.remove('open'); overlay?.classList.remove('open'); };
+  const open = () => {
+    sidebar.classList.add('open');
+    overlay?.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('sidebar-open');
+  };
+  const close = () => {
+    sidebar.classList.remove('open');
+    overlay?.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('sidebar-open');
+  };
 
   toggle.addEventListener('click', () => {
     sidebar.classList.contains('open') ? close() : open();
