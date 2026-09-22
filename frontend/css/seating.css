@@ -213,3 +213,65 @@
     overflow-y: auto;
   }
 }
+
+/* Final touch interaction polish */
+.seating-canvas-wrap {
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+}
+
+.table-node {
+  touch-action: none;
+}
+
+.seating-toolbar .btn,
+.guest-pool-filters button,
+.assign-fallback button,
+.seat-list-item button {
+  touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  .seating-shell {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .seating-pane {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .seating-pane-head {
+    padding: 14px 14px 10px;
+  }
+
+  .guest-pool-list {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .guest-pool-item {
+    min-height: 44px;
+  }
+
+  .seating-canvas-wrap {
+    height: 52vh !important;
+    min-height: 340px;
+    max-height: 520px;
+  }
+
+  .detail-panel-body {
+    padding: 14px;
+  }
+
+  .seat-list-item {
+    min-height: 42px;
+    gap: 10px;
+  }
+
+  .assign-fallback select {
+    min-height: 44px;
+  }
+}
